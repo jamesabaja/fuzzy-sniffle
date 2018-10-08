@@ -42,6 +42,7 @@ class SelectGoal extends Component {
   render() {
     return(
       <div className='container'>
+        <a href='/'>Back to home</a>
         <h3>Select Goals</h3>
         <Button color='info' name='peopleGoals' onClick={this.togglePeopleGoals} style={{ marginBottom: '1rem' }}>{this.state.peopleGoals? 'Hide' : 'Show'} People Goals</Button>
         <Collapse isOpen={this.state.peopleGoals}>
