@@ -5,6 +5,7 @@ import {Route, Switch} from 'react-router-dom';
 import Signup from './Components/Signup/Signup';
 import SelectGoal from './Components/SelectGoal/SelectGoal';
 import Login from './Components/Login/Login';
+import Survey from './Components/Survey/Survey';
 
 class App extends Component {
   render() {
@@ -15,6 +16,7 @@ class App extends Component {
           <Route exact path='/signup' component={Signup} />
           <Route exact path='/home' component={SelectGoal} />
           <Route exact path='/login' component={Login} />
+          <Route exact path='/survey' component={Survey} />
         </Switch>
       </div>
     );
