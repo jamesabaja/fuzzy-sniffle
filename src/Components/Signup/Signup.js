@@ -20,7 +20,7 @@ class Signup extends Component {
 
   signUp = () => {
     this.setState({isLoading: true})
-    axios.post('http://hidden-reef-87726.herokuapp.com/users/add', [{
+    axios.post('https://hidden-reef-87726.herokuapp.com/users/add', [{
       username: this.state.username,
       password: this.state.password
     }])

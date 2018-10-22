@@ -25,7 +25,7 @@ class Login extends Component {
       password: this.state.password
     });
     this.setState({isLoading: true})
-    axios.post('http://hidden-reef-87726.herokuapp.com/users/confirm', [{
+    axios.post('https://hidden-reef-87726.herokuapp.com/users/confirm', [{
       username: this.state.username,
       password: this.state.password
     }])
