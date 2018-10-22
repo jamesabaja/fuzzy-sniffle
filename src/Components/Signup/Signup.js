@@ -68,7 +68,7 @@ class Signup extends Component {
           <FormGroup check>
             <Label check>
               <Input type="radio" name="educAttainment" />{' '}
-              PhD Degrees
+              PhD Degree
             </Label>
           </FormGroup>
           <br />
