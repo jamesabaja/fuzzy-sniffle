@@ -20,7 +20,7 @@ class Signup extends Component {
 
   signUp = () => {
     this.setState({isLoading: true})
-    axios.post('https://hidden-reef-87726.herokuapp.com/users/add', [{
+    axios.post('http://hidden-reef-87726.herokuapp.com/users/add', [{
       username: this.state.username,
       password: this.state.password
     }])
@@ -45,7 +45,11 @@ class Signup extends Component {
             <Input type="text" name="text" id="name" placeholder="Juan dela Cruz" />
           </FormGroup>
           <FormGroup>
-            <Label for="affiliation">School/Affiliation</Label>
+            <Label for="affiliation">Primary Affiliation (usually an office)</Label>
+            <Input type="text" name="text" id="affiliation" placeholder="University of the Philippines Diliman" />
+          </FormGroup>
+          <FormGroup>
+            <Label for="affiliation">Secondary Affiliation (usually a school)</Label>
             <Input type="text" name="text" id="affiliation" placeholder="University of the Philippines Diliman" />
           </FormGroup>
           <Label for="educAttainment">Highest Educational Attainment</Label>
@@ -58,27 +62,33 @@ class Signup extends Component {
           <FormGroup check>
             <Label check>
               <Input type="radio" name="educAttainment" />{' '}
-              Post-graduate Degree
+              Master's or Professional Degree
+            </Label>
+          </FormGroup>
+          <FormGroup check>
+            <Label check>
+              <Input type="radio" name="educAttainment" />{' '}
+              PhD Degree
             </Label>
           </FormGroup>
           <br />
-          <Label for="howLong">How long have you been in the general area of sustainability studies? (may include years in graduate school) </Label>
+          <Label for="howLong">How long have you been in the general area of sustainability/development studies or practice? (may include years in graduate school) </Label>
           <FormGroup check id='howLong'>
             <Label check>
               <Input type="radio" name="howLong" />{' '}
-              1-3
+              Less than 5 years
             </Label>
           </FormGroup>
           <FormGroup check>
             <Label check>
               <Input type="radio" name="howLong" />{' '}
-              4-6
+              Less than 10 years
             </Label>
           </FormGroup>
           <FormGroup check>
             <Label check>
               <Input type="radio" name="howLong" />{' '}
-              More than 7 years
+              More than 10 years
             </Label>
           </FormGroup>
         </Form>

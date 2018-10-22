@@ -1,5 +1,17 @@
 import React, {Component} from 'react';
-import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, CardGroup, Button, Collapse } from 'reactstrap';
+import { 
+  Card, 
+  CardImg, 
+  CardDeck, 
+  CardText, 
+  CardBody, 
+  CardTitle, 
+  CardSubtitle, 
+  CardGroup, 
+  Button, 
+  Collapse,
+  Tooltip
+} from 'reactstrap';
 import Goal1 from '../../Assets/Images/Goal1.png';
 import Goal2 from '../../Assets/Images/Goal2.png';
 import Goal3 from '../../Assets/Images/Goal3.jpg';
@@ -24,7 +36,8 @@ class SelectGoal extends Component {
     this.state = { 
       peopleGoals: false, 
       planetGoals: false,
-      prosperityGoals: false
+      prosperityGoals: false,
+      goal1tooltip: false
     };
   }
 
@@ -35,28 +48,41 @@ class SelectGoal extends Component {
   togglePlanetGoals = () => {
     this.setState({planetGoals: !this.state.planetGoals});
   }
+
   toggleProsperityGoals = () => {
     this.setState({prosperityGoals: !this.state.prosperityGoals});
+  }
+
+  toggleTooltip = (event) => {
+    const targetID = event.target.id;
+    const state = this.state[targetID];
+    console.log(targetID);
+    console.log(state);
+    this.setState({[targetID]: !state});
   }
 
   render() {
     return(
       <div className='container'>
         <a href='/'>Logout</a>
+        <br/>
+        <a href='/survey'>Proceed to survey</a>
+        <br/>
+        <br/>
         <h3>Select Goals</h3>
         <Button color='info' name='peopleGoals' onClick={this.togglePeopleGoals} style={{ marginBottom: '1rem' }}>{this.state.peopleGoals? 'Hide' : 'Show'} People Goals</Button>
         <Collapse isOpen={this.state.peopleGoals}>
-        <CardGroup>
-          <Card>
+        <CardDeck>
+          <Card className='clickable' id='goal1'>
             <CardImg top src={Goal1} alt="Card image cap" />
             <CardBody>
               <CardTitle>Goal 1</CardTitle>
               <CardSubtitle>No Poverty</CardSubtitle>
               <br />
-              <CardText><i>End poverty in all its forms everywhere.</i></CardText>
+              <CardText></CardText>
             </CardBody>
           </Card>
-          <Card>
+          <Card className='clickable' id='goal2'>
             <CardImg top src={Goal2} alt="Card image cap" />
             <CardBody>
               <CardTitle>Goal 2</CardTitle>
@@ -65,7 +91,7 @@ class SelectGoal extends Component {
               <CardText><i>End hunger, achieve food security and improved nutrition, and promote sustainable agriculture.</i></CardText>
             </CardBody>
           </Card>
-          <Card>
+          <Card className='clickable' id='goal3'>
             <CardImg top src={Goal3} alt="Card image cap" />
             <CardBody>
               <CardTitle>Goal 3</CardTitle>
@@ -74,7 +100,7 @@ class SelectGoal extends Component {
               <CardText><i>Ensure healthy lives and promote well-being for all at all ages.</i></CardText>
             </CardBody>
           </Card>
-          <Card>
+          <Card className='clickable' id='goal4'>
             <CardImg top src={Goal4} alt="Card image cap" />
             <CardBody>
               <CardTitle>Goal 4</CardTitle>
@@ -83,7 +109,7 @@ class SelectGoal extends Component {
               <CardText><i>Ensure inclusive and equitable quality education and promote lifelong education learning opportunities for all.</i></CardText>
             </CardBody>
           </Card>
-          <Card>
+          <Card className='clickable' id='goal5'>
             <CardImg top src={Goal5} alt="Card image cap" />
             <CardBody>
               <CardTitle>Goal 5</CardTitle>
@@ -92,7 +118,7 @@ class SelectGoal extends Component {
               <CardText><i>Achieve gender equality and empower all women and girls.</i></CardText>
             </CardBody>
           </Card>
-          <Card>
+          <Card className='clickable' id='goal6'>
             <CardImg top src={Goal6} alt="Card image cap" />
             <CardBody>
               <CardTitle>Goal 6</CardTitle>
@@ -101,13 +127,13 @@ class SelectGoal extends Component {
               <CardText><i>Achieve gender equality and empower all women and girls.</i></CardText>
             </CardBody>
           </Card>
-        </CardGroup>
+        </CardDeck>
         </Collapse>
         <br />
         <Button color='success' name='planetGoals' onClick={this.togglePlanetGoals} style={{ marginBottom: '1rem' }}>{this.state.planetGoals? 'Hide' : 'Show'} Planet Goals</Button>
         <Collapse isOpen={this.state.planetGoals}>
-          <CardGroup>
-            <Card>
+          <CardDeck>
+            <Card className='clickable' id='goal7'>
               <CardImg top src={Goal7} alt="Card image cap" />
               <CardBody>
                 <CardTitle>Goal 7</CardTitle>
@@ -116,7 +142,7 @@ class SelectGoal extends Component {
                 <CardText><i>Ensure access to affordable, reliable, sustainable, and modern energy for all.</i></CardText>
               </CardBody>
             </Card>
-            <Card>
+            <Card className='clickable' id='goal9'>
               <CardImg top src={Goal9} alt="Card image cap" />
               <CardBody>
                 <CardTitle>Goal 9</CardTitle>
@@ -125,7 +151,7 @@ class SelectGoal extends Component {
                 <CardText><i>Build resilient infrastructure, promote inclusive and sustainable industrialization and foster innovation.</i></CardText>
               </CardBody>
             </Card>
-            <Card>
+            <Card className='clickable' id='goal11'>
               <CardImg top src={Goal11} alt="Card image cap" />
               <CardBody>
                 <CardTitle>Goal 11</CardTitle>
@@ -134,7 +160,7 @@ class SelectGoal extends Component {
                 <CardText><i>Make cities and human settlements inclusive, safe, resilient and sustainable.</i></CardText>
               </CardBody>
             </Card>
-            <Card>
+            <Card className='clickable' id='goal13'>
               <CardImg top src={Goal13} alt="Card image cap" />
               <CardBody>
                 <CardTitle>Goal 13</CardTitle>
@@ -143,7 +169,7 @@ class SelectGoal extends Component {
                 <CardText><i>Take urgent action to combat climate change and its impacts.</i></CardText>
               </CardBody>
             </Card>
-            <Card>
+            <Card className='clickable' id='goal14'>
               <CardImg top src={Goal14} alt="Card image cap" />
               <CardBody>
                 <CardTitle>Goal 14</CardTitle>
@@ -152,7 +178,7 @@ class SelectGoal extends Component {
                 <CardText><i>Conserve and sustainably use the oceans, seas and marine resources for sustainable development.</i></CardText>
               </CardBody>
             </Card>
-            <Card>
+            <Card className='clickable' id='goal15'>
               <CardImg top src={Goal15} alt="Card image cap" />
               <CardBody>
                 <CardTitle>Goal 15</CardTitle>
@@ -161,13 +187,13 @@ class SelectGoal extends Component {
                 <CardText><i>Protect, restore and promote sustainable use of terrestrial ecosystems, sustainably manage forests, combat desertification and halt and reverse biodiversity lossland degradation.</i></CardText>
               </CardBody>
             </Card>
-          </CardGroup>
+          </CardDeck>
         </Collapse>
         <br />
         <Button color='warning' name='prosperityGoals' onClick={this.toggleProsperityGoals} style={{ marginBottom: '1rem' }}>{this.state.prosperityGoals? 'Hide' : 'Show'} Prosperity Goals</Button>
         <Collapse isOpen={this.state.prosperityGoals}>
-          <CardGroup>
-            <Card>
+          <CardDeck>
+            <Card className='clickable' id='goal8'>
               <CardImg top src={Goal8} alt="Card image cap" />
               <CardBody>
                 <CardTitle>Goal 8</CardTitle>
@@ -176,7 +202,7 @@ class SelectGoal extends Component {
                 <CardText><i>Promote sustained, inclusive, and sustainable economic growth, full and productive employment, and decent work for all.</i></CardText>
               </CardBody>
             </Card>
-            <Card>
+            <Card className='clickable' id='goal10'>
               <CardImg top src={Goal10} alt="Card image cap" />
               <CardBody>
                 <CardTitle>Goal 10</CardTitle>
@@ -185,7 +211,7 @@ class SelectGoal extends Component {
                 <CardText><i>Reduce inequality within and among countries.</i></CardText>
               </CardBody>
             </Card>
-            <Card>
+            <Card className='clickable' id='goal12'>
               <CardImg top src={Goal12} alt="Card image cap" />
               <CardBody>
                 <CardTitle>Goal 12</CardTitle>
@@ -194,7 +220,7 @@ class SelectGoal extends Component {
                 <CardText><i>Ensure sustainable consumption and production patterns.</i></CardText>
               </CardBody>
             </Card>
-            <Card>
+            <Card className='clickable' id='goal16'>
               <CardImg top src={Goal16} alt="Card image cap" />
               <CardBody>
                 <CardTitle>Goal 16</CardTitle>
@@ -203,7 +229,7 @@ class SelectGoal extends Component {
                 <CardText><i>Promote peaceful and inclusive societies for sustainable development, provide access to justice for all and build effective, accountable and inclusive institutions at all levels.</i></CardText>
               </CardBody>
             </Card>
-            <Card>
+            <Card className='clickable' id='goal17'>
               <CardImg top src={Goal17} alt="Card image cap" />
               <CardBody>
                 <CardTitle>Goal 17</CardTitle>
@@ -212,8 +238,11 @@ class SelectGoal extends Component {
                 <CardText><i>Strengthen the means of implementation and revitalize the global partnership for sustainable development.</i></CardText>
               </CardBody>
             </Card>
-          </CardGroup>
+          </CardDeck>
         </Collapse>
+        <Tooltip placement='top' target='goal1' isOpen={this.state.goal1tooltip} toggle={this.toggleTooltip} id='goal1tooltip'>
+          <i>End poverty in all its forms everywhere.</i>
+        </Tooltip>
       </div>
     );
   }
