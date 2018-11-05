@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
-import FrontPage from './Components/FrontPage/FrontPage';
+import FrontPage from './components/FrontPage/FrontPage';
 import {Route, Switch} from 'react-router-dom';
-import Signup from './Components/Signup/Signup';
-import SelectGoal from './Components/SelectGoal/SelectGoal';
-import Login from './Components/Login/Login';
-import Survey from './Components/Survey/Survey';
+import Signup from './components/Signup/Signup';
+import SelectGoal from './components/SelectGoal/SelectGoal';
+import Login from './components/Login/Login';
+import Survey from './components/Survey/Survey';
 
 class App extends Component {
   render() {

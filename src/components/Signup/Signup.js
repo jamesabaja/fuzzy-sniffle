@@ -8,6 +8,11 @@ class Signup extends Component {
     this.state = {
       username: '',
       password: '',
+      primary_aff: '',
+      secondary_aff: '',
+      educ_attain: '',
+      yrs_exp: '',
+      name: '',
       isLoading: false
     };
   }
@@ -22,7 +27,12 @@ class Signup extends Component {
     this.setState({isLoading: true})
     axios.post('https://hidden-reef-87726.herokuapp.com/users/add', [{
       username: this.state.username,
-      password: this.state.password
+      password: this.state.password,
+      primary_aff: this.state.primary_aff,
+      secondary_aff: this.state.secondary_aff,
+      educ_attain: this.state.educ_attain,
+      yrs_exp: this.state.yrs_exp,
+      name: this.state.name
     }])
     .then(response => {
       this.setState({isLoading: false});
@@ -42,52 +52,52 @@ class Signup extends Component {
         <Form>
           <FormGroup>
             <Label for="name">Name</Label>
-            <Input type="text" name="text" id="name" placeholder="Juan dela Cruz" />
+            <Input type="text" name="text" id="name" placeholder="Juan dela Cruz" onChange={this.onChange} />
           </FormGroup>
           <FormGroup>
-            <Label for="affiliation">Primary Affiliation (usually an office)</Label>
-            <Input type="text" name="text" id="affiliation" placeholder="University of the Philippines Diliman" />
+            <Label for="primary_aff">Primary Affiliation (usually an office)</Label>
+            <Input type="text" name="text" id="primary_aff" onChange={this.onChange} placeholder="University of the Philippines Diliman" />
           </FormGroup>
           <FormGroup>
-            <Label for="affiliation">Secondary Affiliation (usually a school)</Label>
-            <Input type="text" name="text" id="affiliation" placeholder="University of the Philippines Diliman" />
+            <Label for="secondary_aff">Secondary Affiliation (usually a school)</Label>
+            <Input type="text" name="text" id="secondary_aff" onChange={this.onChange} placeholder="University of the Philippines Diliman" />
           </FormGroup>
-          <Label for="educAttainment">Highest Educational Attainment</Label>
-          <FormGroup check id="educAttainment">
+          <Label for="educ_attain">Highest Educational Attainment</Label>
+          <FormGroup check id="educ_attain">
             <Label check>
-              <Input type="radio" name="educAttainment" />{' '}
+              <Input type="radio" value="bachelor's degree" onChange={this.onChange} id="educ_attain" name="educ_attain" />{' '}
               Bachelor's Degree
             </Label>
           </FormGroup>
           <FormGroup check>
             <Label check>
-              <Input type="radio" name="educAttainment" />{' '}
+              <Input type="radio" value="master's or professional degree" onChange={this.onChange} id="educ_attain" name="educ_attain" />{' '}
               Master's or Professional Degree
             </Label>
           </FormGroup>
           <FormGroup check>
             <Label check>
-              <Input type="radio" name="educAttainment" />{' '}
+              <Input type="radio" value="phd degree" onChange={this.onChange} id="educ_attain" name="educ_attain" />{' '}
               PhD Degree
             </Label>
           </FormGroup>
           <br />
-          <Label for="howLong">How long have you been in the general area of sustainability/development studies or practice? (may include years in graduate school) </Label>
-          <FormGroup check id='howLong'>
+          <Label for="yrs_exp">How long have you been in the general area of sustainability/development studies or practice? (may include years in graduate school) </Label>
+          <FormGroup check id='yrs_exp'>
             <Label check>
-              <Input type="radio" name="howLong" />{' '}
+              <Input type="radio" value="less than 5" onChange={this.onChange} id='yrs_exp' name="yrs_exp" />{' '}
               Less than 5 years
             </Label>
           </FormGroup>
           <FormGroup check>
             <Label check>
-              <Input type="radio" name="howLong" />{' '}
+              <Input type="radio" value="less than 10" onChange={this.onChange} id='yrs_exp' name="yrs_exp" />{' '}
               Less than 10 years
             </Label>
           </FormGroup>
           <FormGroup check>
             <Label check>
-              <Input type="radio" name="howLong" />{' '}
+              <Input type="radio" value="more than 10" onChange={this.onChange} id='yrs_exp' name="yrs_exp" />{' '}
               More than 10 years
             </Label>
           </FormGroup>
