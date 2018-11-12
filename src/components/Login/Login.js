@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Form, FormGroup, Label, Input, Button, Alert} from 'reactstrap';
 import axios from 'axios';
+import {connect} from 'react-redux';
+import {authenticate} from '../../actions/userActions';
 
 class Login extends Component {
   constructor(props) {
@@ -32,8 +34,21 @@ class Login extends Component {
     .then(response => {
       if(response.status === 200) {
         this.setState({isLoading: false});
-        this.props.history.push('/home');
-        console.log('Login successful');
+        this.props.authenticate(response.data.user_id);
+        axios.post('https://hidden-reef-87726.herokuapp.com/users/goals', [{
+          user_id: response.data.user_id
+        }])
+        .then(response => {
+          if(response.data.status_code === 400) {
+            this.props.history.push('/home');
+          }else {
+            this.props.history.push('/survey');
+          }
+        }).catch(error => {
+          if(error.response.status === 400) {
+            this.props.history.push('/home');
+          }
+        });
       }
     })
     .catch(error => {
@@ -77,4 +92,12 @@ class Login extends Component {
   }
 };
 
-export default Login;
+const mapStateToProps = state => ({
+  user_id: state.user_id
+});
+
+const mapActionsToProps = {
+  authenticate: authenticate
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(Login);
