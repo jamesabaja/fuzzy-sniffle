@@ -4,6 +4,8 @@ import {ListGroup, ListGroupItem, Button, Form, Input, Label, FormGroup, Navbar,
 import moment from 'moment';
 import axios from 'axios';
 import {connect} from 'react-redux';
+import MenuBar from '../MenuBar/MenuBar';
+import Tabs from '../Tabs/Tabs';
 
 let colorScheme = {
   '1': '#EB1C2D',
@@ -93,32 +95,9 @@ class Survey extends Component {
   render() {
     return(
       <div className='container'>
-        <Navbar color="info" dark expand="md">
-          <NavbarBrand href="/">SDG Interactions Survey</NavbarBrand>
-          <NavbarToggler onClick={this.toggle} />
-          <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav className="ml-auto" navbar>
-              <NavItem>
-                <NavLink href="/survey">Survey</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="/home">Add Goals</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="/">Logout</NavLink>
-              </NavItem>
-            </Nav>
-          </Collapse>
-        </Navbar>
+        <MenuBar />
         <br />
-        <Nav tabs>
-          <NavItem>
-            <NavLink href="/survey" active>Survey Proper</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href="/review">Review and Finalize Answers</NavLink>
-          </NavItem>
-        </Nav>
+        <Tabs active={'survey'}/>
         <br/>
         <h4>Survey Module</h4>
         { this.state.loadingSubgoals ? <Alert>Loading subgoals</Alert> : ''}

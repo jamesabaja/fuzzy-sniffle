@@ -6,6 +6,8 @@ import Signup from './components/Signup/Signup';
 import SelectGoal from './components/SelectGoal/SelectGoal';
 import Login from './components/Login/Login';
 import Survey from './components/Survey/Survey';
+import Review from './components/Review/Review';
+import AddGoals from './components/AddGoals/AddGoals';
 
 class App extends Component {
   render() {
@@ -17,6 +19,8 @@ class App extends Component {
           <Route exact path='/home' component={SelectGoal} />
           <Route exact path='/login' component={Login} />
           <Route exact path='/survey' component={Survey} />
+          <Route exact path='/review' component={Review} />
+          <Route exact path='/add' component={AddGoals} />
         </Switch>
       </div>
     );
