@@ -109,7 +109,7 @@ class Signup extends Component {
         </Alert>
         <Form>
           <FormGroup>
-            <Label for="accountName">Username</Label>
+            <Label for="accountName">Email</Label>
             <Input type="text" name="text" id="username" onChange={this.onChange} />
           </FormGroup>
           <FormGroup>

@@ -1,9 +1,29 @@
 import React, {Component} from 'react';
 //eslint-disable-next-line
-import {ListGroup, ListGroupItem, Button, Form, Input, Label, FormGroup, Alert, Col, Row} from 'reactstrap';
+import {ListGroup, ListGroupItem, Button, Form, Input, Label, FormGroup, Navbar, NavbarBrand, NavbarToggler, Collapse, Alert, Col, Row, Nav, NavItem, NavLink} from 'reactstrap';
 import moment from 'moment';
 import axios from 'axios';
 import {connect} from 'react-redux';
+
+let colorScheme = {
+  '1': '#EB1C2D',
+  '2': '#D3A029',
+  '3': '#4CA146',
+  '4': '#C7212F',
+  '5': '#EF402D',
+  '6': '#27BFE6',
+  '7': '#FBC412',
+  '8': '#A31C44',
+  '9': '#F36D25',
+  '10': '#DD1367',
+  '11': '#F89D2A',
+  '12': '#CF8D2A',
+  '13': '#48773E',
+  '14': '#1F97D4',
+  '15': '#3EB049',
+  '16': '#136A9F',
+  '17': '#183668'
+}
 
 //let selected = ["1", "2", "6"];
 class Survey extends Component {
@@ -14,8 +34,15 @@ class Survey extends Component {
       endtime: null,
       elapsedtime: null,
       subgoals: [],
-      loadingSubgoals: true
+      loadingSubgoals: true,
+      isOpen: false
     }
+  }
+
+  toggle = () => {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
   }
 
   setStartTime = () => {
@@ -30,11 +57,10 @@ class Survey extends Component {
 
   componentWillMount() {
     axios.post('https://hidden-reef-87726.herokuapp.com/users/goals', [{
-      user_id: this.props.user_id.toString()
+      user_id: localStorage.getItem('user_id')
     }])
     .then(response => {
       let selected = response.data;
-      console.log(selected);
       selected.map((item, i) => {
         axios.post('https://hidden-reef-87726.herokuapp.com/goals/sub', [{
           goal_id: item.toString()
@@ -57,38 +83,74 @@ class Survey extends Component {
     });
   }
 
+  colorStyle = (i) => {
+    let color = colorScheme[i];
+    return {
+      color: color, 
+    }
+  }
+
   render() {
     return(
       <div className='container'>
-        <a href='/'>Logout</a>
+        <Navbar color="info" dark expand="md">
+          <NavbarBrand href="/">SDG Interactions Survey</NavbarBrand>
+          <NavbarToggler onClick={this.toggle} />
+          <Collapse isOpen={this.state.isOpen} navbar>
+            <Nav className="ml-auto" navbar>
+              <NavItem>
+                <NavLink href="/survey">Survey</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/home">Add Goals</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/">Logout</NavLink>
+              </NavItem>
+            </Nav>
+          </Collapse>
+        </Navbar>
+        <br />
+        <Nav tabs>
+          <NavItem>
+            <NavLink href="/survey" active>Survey Proper</NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink href="/review">Review and Finalize Answers</NavLink>
+          </NavItem>
+        </Nav>
         <br/>
-        <a href='/home'>Back to select goals</a>
-        <br/>
-        <br/>
-        <Row>
-        <Col xs='4'>
-        </Col>
-        <Col xs='8'>
-        <h4>Survey proper</h4>
+        <h4>Survey Module</h4>
         { this.state.loadingSubgoals ? <Alert>Loading subgoals</Alert> : ''}
-        <Button onClick={this.setStartTime} color='info'>Start Time</Button>
-        <p>Start Time: {this.state.starttime === null ? '' : this.state.starttime}</p>
+        {/* <Button onClick={this.setStartTime} color='info'>Start Time</Button>
+        <p>Start Time: {this.state.starttime === null ? '' : this.state.starttime}</p> */}
         <ListGroup>
           {this.state.subgoals.map((item, i) => {
             return(
               <ListGroupItem id={i}>
-                {item.goal_id}.{item.subgoal_id} <br />
-                {item.body}
+                <Row>
+                  <Col>
+                  <span style={this.colorStyle(item.goal_id)}>
+                  <h4>{item.goal_id}.{item.subgoal_id}</h4> 
+                  {item.body}
+                  </span>
+                  </Col>
+                  <Col>
+                  <span style={this.colorStyle(item.goal_id)}>
+                  <h4>{item.goal_id}.{item.subgoal_id}</h4> 
+                  {item.body}
+                  </span>
+                  </Col>
+                </Row>
+                
               </ListGroupItem>
             );
           })}
         </ListGroup>
         <br/>
-        <Button onClick={this.setEndTime} color='info'>End Time</Button>
+        {/* <Button onClick={this.setEndTime} color='info'>End Time</Button>
         <p>End Time: {this.state.endtime === null ? '' : this.state.endtime}</p>
-        <p>Time consumed: {this.state.elapsedtime !== null ? this.state.elapsedtime : ''} {this.state.elapsedtime !== null ? this.state.elapsedtime > 1 ? 'minutes' : this.state.elapsedtime > 0 ? 'minute': '' : '' }</p>
-        </Col>
-        </Row>
+        <p>Time consumed: {this.state.elapsedtime !== null ? this.state.elapsedtime : ''} {this.state.elapsedtime !== null ? this.state.elapsedtime > 1 ? 'minutes' : this.state.elapsedtime > 0 ? 'minute': '' : '' }</p> */}
       </div>
     );
   }
