@@ -142,8 +142,6 @@ class SelectGoal extends Component {
       <div className='container'>
         <a href='/'>Logout</a>
         <br/>
-        <a href='/survey'>Proceed to survey</a>
-        <br/>
         <br/>
         <h3>Select Goals</h3>
         {/* <h4>Selected Goals: {this.state.selectedGoals.sort().map((item, i) => {return item + " "})}</h4> */}
