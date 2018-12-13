@@ -36,6 +36,7 @@ class Login extends Component {
         this.setState({isLoading: false});
         this.props.authenticate(response.data.user_id);
         localStorage.setItem('user_id', response.data.user_id);
+        localStorage.setItem('username', this.state.username);
         axios.post('https://hidden-reef-87726.herokuapp.com/users/goals', [{
           user_id: response.data.user_id
         }])

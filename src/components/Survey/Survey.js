@@ -6,6 +6,11 @@ import axios from 'axios';
 import {connect} from 'react-redux';
 import MenuBar from '../MenuBar/MenuBar';
 import Tabs from '../Tabs/Tabs';
+import Slider, { Range } from 'rc-slider';
+// We can just import Slider or Range to reduce bundle size
+// import Slider from 'rc-slider/lib/Slider';
+// import Range from 'rc-slider/lib/Range';
+import 'rc-slider/assets/index.css';
 
 let colorScheme = {
   '1': '#EB1C2D',
@@ -37,7 +42,12 @@ class Survey extends Component {
       elapsedtime: null,
       subgoals: [],
       loadingSubgoals: true,
-      isOpen: false
+      isOpen: false,
+      activeSubgoal: 0,
+      pairings: [],
+      scoreValue: 0,
+      comment: '',
+      isEmpty: false
     }
   }
 
@@ -54,7 +64,81 @@ class Survey extends Component {
   setEndTime = () => {
     let endtime = moment().format('h:mm:ss a');
     let starttime = moment(this.state.starttime, 'h:mm:ss a');
-    this.setState({endtime: endtime, elapsedtime: moment().diff(starttime, 'minutes')});
+    this.setState({endtime: endtime, elapsedtime: moment().diff(starttime)/1000});
+  }
+
+  submitAnswer = (goal1, sub1, goal2, sub2) => {
+    let target1_goal, target1_subgoal, target2_goal, target2_subgoal;
+    let endtime = moment().format('h:mm:ss a');
+    let starttime = moment(this.state.starttime, 'h:mm:ss a');
+    this.setState({endtime: endtime, elapsedtime: moment().diff(starttime)/1000}, () => {
+      if(parseInt(goal1, 10) < parseInt(goal2, 10)) {
+        target1_goal = goal1;
+        target1_subgoal = sub1;
+        target2_goal = goal2;
+        target2_subgoal = sub2;
+      }else {
+        if(parseInt(goal1, 10) === parseInt(goal2, 10)) {
+          target1_goal = goal1;
+          target2_goal = goal2;
+          if(parseInt(sub1, 10) <= parseInt(sub2, 10)) {
+            target1_subgoal = sub1;
+            target2_subgoal = sub2;
+          }else {
+            target1_subgoal = sub2;
+            target2_subgoal = sub1;
+          }
+        }else {
+          target1_goal = goal2;
+          target1_subgoal = sub2;
+          target2_goal = goal1;
+          target2_subgoal = sub1;
+        }
+      }
+      if(this.state.scoreValue < 0 && this.state.comment === '') {
+        this.setState({isEmpty: true});
+      }else {
+        console.log({
+          'target1_goal': target1_goal,
+          'target1_subgoal': target1_subgoal,
+          'target2_goal': target2_goal,
+          'target2_subgoal': target2_subgoal,
+          'score': parseInt(this.state.scoreValue, 0),
+          'reason': this.state.comment,
+          'username': localStorage.getItem('username'),
+          'finished': false,
+          'time_answered': parseInt(this.state.elapsedtime, 10)
+        });
+        axios.post('https://hidden-reef-87726.herokuapp.com/survey/answer', [{
+          'target1_goal': target1_goal,
+          'target1_subgoal': target1_subgoal,
+          'target2_goal': target2_goal,
+          'target2_subgoal': target2_subgoal,
+          'score': parseInt(this.state.scoreValue, 0),
+          'reason': this.state.comment,
+          'username': localStorage.getItem('username'),
+          'finished': false,
+          'time_answered': parseInt(this.state.elapsedtime, 10)
+        }]).then(response => {
+          console.log({
+            'target1_goal': target1_goal,
+            'target1_subgoal': target1_subgoal,
+            'target2_goal': target2_goal,
+            'target2_subgoal': target2_subgoal,
+            'score': parseInt(this.state.scoreValue, 0),
+            'reason': this.state.comment,
+            'username': localStorage.getItem('username'),
+            'finished': false,
+            'time_answered': parseInt(this.state.elapsedtime, 10)
+          })
+          console.log(response);
+          this.setState({comment: ''});
+          if(response.status === 200) {
+            this.nextSubgoal();
+          }
+        });
+      }
+    });
   }
 
   componentWillMount() {
@@ -92,6 +176,40 @@ class Survey extends Component {
     }
   }
 
+  nextSubgoal = () => {
+    this.setState(prevState => {
+      let randomIndex = Math.floor(Math.random() * Math.floor(this.state.pairings.length));
+      return {activeSubgoal: randomIndex}
+    });
+    this.setStartTime();
+  }
+
+  sliderChange = (value) => {
+    this.setState({scoreValue: value});
+  }
+
+  onDismiss = () => {
+    this.setState({ isEmpty: false });
+  }
+
+  generateSurvey = () => {
+    for(let i = 0; i < this.state.subgoals.length; i++) {
+      for(let j = 0; j < this.state.subgoals.length; j++) {
+        this.setState(prevState => {
+          return {pairings: [...prevState.pairings, [this.state.subgoals[i], this.state.subgoals[j]]],
+          activeSubgoal: Math.floor(Math.random() * Math.floor(prevState.pairings.length))}
+        });
+      }
+    }
+    this.setStartTime();
+  }
+
+  onChange = (event) => {
+    const id = event.target.id;
+    const value = event.target.value;
+    this.setState({[id]: value});
+  }
+
   render() {
     return(
       <div className='container'>
@@ -103,8 +221,14 @@ class Survey extends Component {
         { this.state.loadingSubgoals ? <Alert>Loading subgoals</Alert> : ''}
         {/* <Button onClick={this.setStartTime} color='info'>Start Time</Button>
         <p>Start Time: {this.state.starttime === null ? '' : this.state.starttime}</p> */}
+        <Button onClick={this.generateSurvey}>Generate Survey</Button>
+        <br/>
+        <br/>
+        <Alert color='danger' isOpen={this.state.isEmpty} toggle={this.onDismiss}>
+          Key Interaction field is required as you have entered a negative interaction score for the targets.
+        </Alert>
         <ListGroup>
-          {this.state.subgoals.map((item, i) => {
+          {/*this.state.subgoals.map((item, i) => {
             return(
               <ListGroupItem id={i}>
                 <Row>
@@ -121,10 +245,52 @@ class Survey extends Component {
                   </span>
                   </Col>
                 </Row>
-                
               </ListGroupItem>
+              
             );
-          })}
+          })*/}
+          { this.state.pairings.length > 0 &&
+            <ListGroupItem>
+              <Row>
+                <Col>
+                  <Button onClick={this.nextSubgoal}>Skip</Button>
+                </Col>
+              </Row>
+              <br />
+              <Row>
+                <Col>
+                <span style={this.colorStyle(this.state.pairings[this.state.activeSubgoal][0].goal_id)}>
+                <h4>{this.state.pairings[this.state.activeSubgoal][0].goal_id}.{this.state.pairings[this.state.activeSubgoal][0].subgoal_id}</h4> </span>
+                {this.state.pairings[this.state.activeSubgoal][0].body}
+                </Col>
+                <Col>
+                <span style={this.colorStyle(this.state.pairings[this.state.activeSubgoal][1].goal_id)}>
+                <h4>{this.state.pairings[this.state.activeSubgoal][1].goal_id}.{this.state.pairings[this.state.activeSubgoal][1].subgoal_id}</h4> </span>
+                {this.state.pairings[this.state.activeSubgoal][1].body}
+                </Col>
+              </Row>
+              <br/>
+              <Slider min={-3} max={3} defaultValue={0} 
+                marks={{
+                  '-3': {"style": 'bold', 'label': '-3'},
+                  '-2': '-2',
+                  '-1': '-1',
+                  '0': '0',
+                  '1': '1',
+                  '2': '2',
+                  '3': '3'
+                }}
+                included={false}
+                onChange={this.sliderChange}
+              />
+              <br/>
+              {this.state.scoreValue >= 0 && <Label for="answer"><b>Key Interactions</b> <i>Comments/Additional Notes</i></Label>}
+              {this.state.scoreValue < 0 && <Label style={{color: 'red'}}for="answer"><b>Key Interactions</b> <i>Comments/Additional Notes (REQUIRED)</i></Label>}
+              <Input value={this.state.comment} type="text" name="answer" id="comment" onChange={this.onChange}/>
+              <br />
+              <Button color='success' onClick={() => this.submitAnswer(this.state.pairings[this.state.activeSubgoal][0].goal_id, this.state.pairings[this.state.activeSubgoal][0].subgoal_id, this.state.pairings[this.state.activeSubgoal][1].goal_id, this.state.pairings[this.state.activeSubgoal][1].subgoal_id)}>Submit</Button>
+            </ListGroupItem>
+          }
         </ListGroup>
         <br/>
         {/* <Button onClick={this.setEndTime} color='info'>End Time</Button>
