@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import MenuBar from '../MenuBar/MenuBar';
 import Tabs from '../Tabs/Tabs';
-import {Alert, ListGroup, ListGroupItem, Input, Button, Row, Col, Label} from 'reactstrap';
+import {Alert, ListGroup, ListGroupItem, Input, Button, Row, Col, Label, Container} from 'reactstrap';
 import axios from 'axios';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -137,67 +137,71 @@ class Review extends Component {
 
   render() {
     return(
-      <div className='container'>
+      <div>
         <MenuBar />
-        <br />
+        <Container>
         <Tabs active={'review'}/>
         <br/>
         <h4>Review Module</h4>
-        <br/>
-        { this.state.loadingAnswers ? <Alert>Loading answers...</Alert> : ''}
-        <h4>Time Consumed: {parseInt(this.state.totalTime / 60, 10)} minutes, {this.state.totalTime % 60} seconds</h4>
-        <ListGroup>
-          {this.state.answers.map((item, i) => {
-            if(!item.finished) {
-              return(
-              <ListGroupItem>
-                <Row>
-                  <Col>
-                    <span style={this.colorStyle(item.target1_goal)}><h4>{item.target1_goal}.{item.target1_subgoal}</h4></span>
-                    <p>{this.state.itemBody.map((body, i) => {
-                      if(body.goal === item.target1_goal && body.subgoal === item.target1_subgoal) {
-                        return body.body;
-                      }
-                      return '';
-                    })}</p>
-                  </Col>
-                  <Col>
-                    <span style={this.colorStyle(item.target2_goal)}><h4>{item.target2_goal}.{item.target2_subgoal}</h4></span>
-                    <p>{this.state.itemBody.map((body, i) => {
-                      if(body.goal === item.target2_goal && body.subgoal === item.target2_subgoal) {
-                        return body.body;
-                      }
-                      return '';
-                    })}</p>
-                  </Col>
-                </Row>
-                <br/>
-                <Slider min={-3} max={3} defaultValue={item.score} 
-                  marks={{
-                    '-3': {"style": 'bold', 'label': '-3'},
-                    '-2': '-2',
-                    '-1': '-1',
-                    '0': '0',
-                    '1': '1',
-                    '2': '2',
-                    '3': '3'
-                  }}
-                  included={false}
-                  onChange={value => this.sliderChange(value, i)}
-                />
-                <br/>
-                <Label for="answer"><b>Key Interactions</b> <i>Comments/Additional Notes</i></Label>
-                <Input value={item.reason} id={i} onChange={this.onChange}></Input>
-              </ListGroupItem>
-              );
-            }
-          })}
-        </ListGroup>
-        <br />
-        {this.state.answers.length > 0 && <Button color='success' onClick={this.finalize}>Finalize and Submit Answers</Button>}
+        { this.state.loadingAnswers ? <Alert>Loading answers...</Alert> : 
+        <div>
+          <h4>Time Consumed: {parseInt(this.state.totalTime / 60, 10)} minutes, {this.state.totalTime % 60} seconds</h4>
+          <ListGroup>
+            {this.state.answers.map((item, i) => {
+              if(!item.finished) {
+                return(
+                <ListGroupItem>
+                  <Row>
+                    <Col>
+                      <span style={this.colorStyle(item.target1_goal)}><h4>{item.target1_goal}.{item.target1_subgoal}</h4></span>
+                      <p>{this.state.itemBody.map((body, i) => {
+                        if(body.goal === item.target1_goal && body.subgoal === item.target1_subgoal) {
+                          return body.body;
+                        }
+                        return '';
+                      })}</p>
+                    </Col>
+                    <Col>
+                      <span style={this.colorStyle(item.target2_goal)}><h4>{item.target2_goal}.{item.target2_subgoal}</h4></span>
+                      <p>{this.state.itemBody.map((body, i) => {
+                        if(body.goal === item.target2_goal && body.subgoal === item.target2_subgoal) {
+                          return body.body;
+                        }
+                        return '';
+                      })}</p>
+                    </Col>
+                  </Row>
+                  <br/>
+                  <Slider min={-3} max={3} defaultValue={item.score} 
+                    marks={{
+                      '-3': {"style": 'bold', 'label': '-3'},
+                      '-2': '-2',
+                      '-1': '-1',
+                      '0': '0',
+                      '1': '1',
+                      '2': '2',
+                      '3': '3'
+                    }}
+                    included={false}
+                    onChange={value => this.sliderChange(value, i)}
+                  />
+                  <br/>
+                  <Label for="answer"><b>Key Interactions</b> <i>Comments/Additional Notes</i></Label>
+                  <Input value={item.reason} id={i} onChange={this.onChange}></Input>
+                </ListGroupItem>
+                );
+              }
+            })}
+          </ListGroup>
+          <br />
+          {this.state.answers.length > 0 && <Button color='success' onClick={this.finalize}>Finalize and Submit Answers</Button>}
+        </div>
+        }
+        
         {/* <Button onClick={this.setEndTime} color='info'>End Time</Button>
         <p>End Time: {this.state.endtime === null ? '' : this.state.endtime}</p>
         <p>Time consumed: {this.state.elapsedtime !== null ? this.state.elapsedtime : ''} {this.state.elapsedtime !== null ? this.state.elapsedtime > 1 ? 'minutes' : this.state.elapsedtime > 0 ? 'minute': '' : '' }</p> */}
+        </Container>
       </div>
     );
   }

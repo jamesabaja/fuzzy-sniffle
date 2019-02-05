@@ -1,6 +1,12 @@
 import React, {Component} from 'react';
-import {Form, FormGroup, Label, Input, Button, Alert} from 'reactstrap';
+import {Form, FormGroup, Label, Input, Button, Alert, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
 import axios from 'axios';
+
+let PROFESSORS = [
+  'Dr. Bongolan',
+  'Dr. Cruz',
+  'Prof. Rivera'
+]
 
 class Signup extends Component {
   constructor(props) {
@@ -13,7 +19,11 @@ class Signup extends Component {
       educ_attain: '',
       yrs_exp: '',
       name: '',
-      isLoading: false
+      isLoading: false,
+      confirmPassword: '',
+      mismatchPasswordAlert: false,
+      professorDropdown: false,
+      professor: ''
     };
   }
 
@@ -24,22 +34,39 @@ class Signup extends Component {
   }
 
   signUp = () => {
-    this.setState({isLoading: true})
-    axios.post('https://hidden-reef-87726.herokuapp.com/users/add', [{
-      username: this.state.username,
-      password: this.state.password,
-      primary_aff: this.state.primary_aff,
-      secondary_aff: this.state.secondary_aff,
-      educ_attain: this.state.educ_attain,
-      yrs_exp: this.state.yrs_exp,
-      name: this.state.name
-    }])
-    .then(response => {
-      this.setState({isLoading: false});
-      if(response.status === 200) {
-        this.props.history.push('/');
-      }
-    });
+    this.setState({mismatchPasswordAlert: false, isLoading: true});
+    if(this.state.password !== this.state.confirmPassword && this.state.password !== '') {
+      axios.post('https://hidden-reef-87726.herokuapp.com/users/add', [{
+        username: this.state.username,
+        password: this.state.password,
+        primary_aff: this.state.primary_aff,
+        secondary_aff: this.state.secondary_aff,
+        educ_attain: this.state.educ_attain,
+        yrs_exp: this.state.yrs_exp,
+        name: this.state.name,
+        contact_person: this.state.professor
+      }])
+      .then(response => {
+        this.setState({isLoading: false});
+        if(response.status === 200) {
+          this.props.history.push('/');
+        }
+      });
+    }else {
+      this.setState({mismatchPasswordAlert: true, isLoading: false});
+    }
+  }
+
+  dismissMismatchPasswordAlert = () => {
+    this.setState({mismatchPasswordAlert: false});
+  }
+
+  toggleProfessorDropdown = () => {
+    this.setState({professorDropdown: !this.state.professorDropdown});
+  }
+
+  selectProfessor = (professor) => {
+    this.setState({professor: professor});
   }
 
   render() {
@@ -101,11 +128,35 @@ class Signup extends Component {
               More than 10 years
             </Label>
           </FormGroup>
+          <br />
+          <FormGroup>
+            <Label>
+              Professor/Contact Person
+            </Label>
+            <br/>
+            <ButtonDropdown isOpen={this.state.professorDropdown} toggle={this.toggleProfessorDropdown}>
+              <DropdownToggle color='info' caret>
+                {this.state.professor === '' ? 'Select Professor' : this.state.professor}
+              </DropdownToggle>
+              <DropdownMenu>
+                {PROFESSORS.map((item, i) => {
+                  return(
+                    <DropdownItem onClick={() => this.selectProfessor(item)}>
+                      {item}
+                    </DropdownItem>
+                  )
+                })}
+              </DropdownMenu>
+            </ButtonDropdown>
+          </FormGroup>
         </Form>
         <br />
         <h5>Login Credentials</h5>
         <Alert color="light" isOpen={this.state.isLoading}>
           Creating your account, please wait...
+        </Alert>
+        <Alert color="danger" isOpen={this.state.mismatchPasswordAlert} toggle={this.dismissMismatchPasswordAlert}>
+          Passwords do not match.
         </Alert>
         <Form>
           <FormGroup>
@@ -113,8 +164,12 @@ class Signup extends Component {
             <Input type="text" name="text" id="username" onChange={this.onChange} />
           </FormGroup>
           <FormGroup>
-            <Label for="accountName">Password</Label>
-            <Input type="password" name="text" id="password" onChange={this.onChange} />
+            <Label for="password">Password</Label>
+            <Input type="password" name="password" id="password" onChange={this.onChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="confirmPassword">Confirm Password</Label>
+            <Input type="password" name="confirmPassword" id="confirmPassword" onChange={this.onChange} />
           </FormGroup>
         </Form>
         {/*<a href='/'>*/}<Button color='info' onClick={this.signUp}>Submit</Button>{/*</a>*/}

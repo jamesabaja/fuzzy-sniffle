@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 //eslint-disable-next-line
-import {ListGroup, ListGroupItem, Button, Form, Input, Label, FormGroup, Navbar, NavbarBrand, NavbarToggler, Collapse, Alert, Col, Row, Nav, NavItem, NavLink} from 'reactstrap';
+import {ListGroup, ListGroupItem, Button, Form, Input, Label, FormGroup, Navbar, NavbarBrand, NavbarToggler, Collapse, Alert, Col, Row, Nav, NavItem, NavLink, Container, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import moment from 'moment';
 import axios from 'axios';
 import {connect} from 'react-redux';
@@ -47,7 +47,10 @@ class Survey extends Component {
       pairings: [],
       scoreValue: 0,
       comment: '',
-      isEmpty: false
+      isEmpty: false,
+      countAnswered: 0,
+      hideButton: false,
+      finalModal: false
     }
   }
 
@@ -71,7 +74,7 @@ class Survey extends Component {
     let target1_goal, target1_subgoal, target2_goal, target2_subgoal;
     let endtime = moment().format('h:mm:ss a');
     let starttime = moment(this.state.starttime, 'h:mm:ss a');
-    this.setState({endtime: endtime, elapsedtime: moment().diff(starttime)/1000}, () => {
+    this.setState({endtime: endtime, countAnswered: this.state.countAnswered + 1,elapsedtime: moment().diff(starttime)/1000}, () => {
       if(parseInt(goal1, 10) < parseInt(goal2, 10)) {
         target1_goal = goal1;
         target1_subgoal = sub1;
@@ -137,6 +140,9 @@ class Survey extends Component {
             this.nextSubgoal();
           }
         });
+        if(this.state.countAnswered === 20) {
+          this.setState({finalModal: true});
+        }
       }
     });
   }
@@ -146,7 +152,8 @@ class Survey extends Component {
       user_id: localStorage.getItem('user_id')
     }])
     .then(response => {
-      let selected = response.data;
+      let selected = [];
+      selected = response.data;
       selected.map((item, i) => {
         axios.post('https://hidden-reef-87726.herokuapp.com/goals/sub', [{
           goal_id: item.toString()
@@ -177,10 +184,28 @@ class Survey extends Component {
   }
 
   nextSubgoal = () => {
-    this.setState(prevState => {
-      let randomIndex = Math.floor(Math.random() * Math.floor(this.state.pairings.length));
-      return {activeSubgoal: randomIndex}
-    });
+    let randomIndex = Math.floor(Math.random() * Math.floor(this.state.pairings.length));
+    if(this.state.pairings[randomIndex][0].goal_id === this.state.pairings[randomIndex][1].goal_id) {
+      if(this.state.pairings[randomIndex][0].subgoal_id === this.state.pairings[randomIndex][1].subgoal_id) {
+        while(true) {
+          randomIndex = Math.floor(Math.random() * Math.floor(this.state.pairings.length));
+          if(this.state.pairings[randomIndex][0].subgoal_id !== this.state.pairings[randomIndex][1].subgoal_id) {
+            this.setState({activeSubgoal: randomIndex});     
+            break;
+          }
+        }
+      } else {
+        this.setState(prevState => {
+          let randomIndex = Math.floor(Math.random() * Math.floor(this.state.pairings.length));
+          return {activeSubgoal: randomIndex}
+        });
+      }
+    } else {
+      this.setState(prevState => {
+        let randomIndex = Math.floor(Math.random() * Math.floor(this.state.pairings.length));
+        return {activeSubgoal: randomIndex}
+      });
+    } 
     this.setStartTime();
   }
 
@@ -194,13 +219,16 @@ class Survey extends Component {
 
   generateSurvey = () => {
     for(let i = 0; i < this.state.subgoals.length; i++) {
-      for(let j = 0; j < this.state.subgoals.length; j++) {
-        this.setState(prevState => {
-          return {pairings: [...prevState.pairings, [this.state.subgoals[i], this.state.subgoals[j]]],
-          activeSubgoal: Math.floor(Math.random() * Math.floor(prevState.pairings.length))}
-        });
+      for(let j = i; j < this.state.subgoals.length; j++) {
+        if(this.state.subgoals[i] !== this.state.subgoals[j]) {
+          this.setState(prevState => {
+            return {pairings: [...prevState.pairings, [this.state.subgoals[i], this.state.subgoals[j]]],
+            activeSubgoal: Math.floor(Math.random() * Math.floor(prevState.pairings.length))}
+          });
+        }
       }
     }
+    this.setState({hideButton: true});
     this.setStartTime();
   }
 
@@ -210,19 +238,53 @@ class Survey extends Component {
     this.setState({[id]: value});
   }
 
+  toggleFinalModal = () => {
+    this.setState({finalModal: !this.state.finalModal});
+  }
+
+  resetSurvey = () => {
+    window.location.reload();
+  }
+
+  reviewAnswers = () => {
+    this.props.history.push('/review');
+  }
+
+  logOut = () => {
+    this.props.history.push('/');
+  }
+
   render() {
     return(
-      <div className='container'>
+      <div>
         <MenuBar />
-        <br />
+        <Container>
+        <Modal isOpen={this.state.finalModal} toggle={this.toggleFinalModal}>
+          <ModalHeader toggle={this.toggleFinalModal}>Status</ModalHeader>
+          <ModalBody>
+            You have finished answering 20 survey questions. <br/>
+            Click 'Reset Survey' to answer another set of 20 survey questions. <br/>
+            Click 'Review Answers' to review and finalize all answered questions. <br/>
+            Click 'Log out' if you're done and log out of the site.
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.resetSurvey}>Reset Survey</Button>{' '}
+            <Button color="warning" onClick={this.reviewAnswers}>Review Answers</Button>{' '}
+            <Button color="success" onClick={this.logOut}>Log out</Button>
+          </ModalFooter>
+        </Modal>
         <Tabs active={'survey'}/>
         <br/>
-        <h4>Survey Module</h4>
+        <Row>
+          <Col><h4>Survey Module</h4></Col>
+          <Col/>
+          <Col/>
+          <Col><h4>Answered: <span style={this.state.countAnswered < 5 ? {color: 'green'} : this.state.countAnswered < 10 ? {color: 'yellow'} : this.state.countAnswered < 15 ? {color: 'orange'} : {color: 'red'}}>{this.state.countAnswered}/20</span></h4></Col>
+        </Row>
         { this.state.loadingSubgoals ? <Alert>Loading subgoals</Alert> : ''}
         {/* <Button onClick={this.setStartTime} color='info'>Start Time</Button>
         <p>Start Time: {this.state.starttime === null ? '' : this.state.starttime}</p> */}
-        <Button onClick={this.generateSurvey}>Generate Survey</Button>
-        <br/>
+        {this.state.hideButton || this.state.loadingSubgoals ? '' : <Button onClick={this.generateSurvey}>Generate Survey<br/></Button>}
         <br/>
         <Alert color='danger' isOpen={this.state.isEmpty} toggle={this.onDismiss}>
           Key Interaction field is required as you have entered a negative interaction score for the targets.
@@ -296,6 +358,7 @@ class Survey extends Component {
         {/* <Button onClick={this.setEndTime} color='info'>End Time</Button>
         <p>End Time: {this.state.endtime === null ? '' : this.state.endtime}</p>
         <p>Time consumed: {this.state.elapsedtime !== null ? this.state.elapsedtime : ''} {this.state.elapsedtime !== null ? this.state.elapsedtime > 1 ? 'minutes' : this.state.elapsedtime > 0 ? 'minute': '' : '' }</p> */}
+        </Container>
       </div>
     );
   }
