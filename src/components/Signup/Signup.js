@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Form, FormGroup, Label, Input, Button, Alert, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
+import {Form, FormGroup, Label, Input, Button, Alert, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, CustomInput} from 'reactstrap';
 import axios from 'axios';
 
 let PROFESSORS = [
@@ -23,7 +23,8 @@ class Signup extends Component {
       confirmPassword: '',
       mismatchPasswordAlert: false,
       professorDropdown: false,
-      professor: ''
+      professor: '',
+      acknowledge: false
     };
   }
 
@@ -44,7 +45,8 @@ class Signup extends Component {
         educ_attain: this.state.educ_attain,
         yrs_exp: this.state.yrs_exp,
         name: this.state.name,
-        contact_person: this.state.professor
+        contact_person: this.state.professor,
+        acknowledge: this.state.acknowledge
       }])
       .then(response => {
         this.setState({isLoading: false});
@@ -69,6 +71,10 @@ class Signup extends Component {
     this.setState({professor: professor});
   }
 
+  handleClick = () => {
+    this.setState({acknowledge: !this.state.acknowledge});
+  }
+
   render() {
     return(
       <div className='container'>
@@ -89,6 +95,10 @@ class Signup extends Component {
             <Label for="secondary_aff">Secondary Affiliation (usually a school)</Label>
             <Input type="text" name="text" id="secondary_aff" onChange={this.onChange} placeholder="University of the Philippines Diliman" />
           </FormGroup>
+          <FormGroup check>
+            <CustomInput type="checkbox" id="exampleCustomCheckbox" label="I would like to be acknowledged in the website, appendix for the paper and anywhere else regarding this study. (Only NAME and PRIMARY AFFILIATION will be shown)" checked={this.state.acknowledge} onClick={this.handleClick}/>
+          </FormGroup>
+          <br/>
           <Label for="educ_attain">Highest Educational Attainment</Label>
           <FormGroup check id="educ_attain">
             <Label check>
