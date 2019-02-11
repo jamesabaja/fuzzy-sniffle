@@ -36,7 +36,7 @@ class Signup extends Component {
 
   signUp = () => {
     this.setState({mismatchPasswordAlert: false, isLoading: true});
-    if(this.state.password !== this.state.confirmPassword && this.state.password !== '') {
+    if(this.state.password === this.state.confirmPassword && this.state.password !== '') {
       axios.post('https://hidden-reef-87726.herokuapp.com/users/add', [{
         username: this.state.username,
         password: this.state.password,

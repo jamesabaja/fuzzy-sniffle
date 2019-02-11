@@ -276,8 +276,7 @@ class SelectGoal extends Component {
             </ListGroup>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.toggleModal}>Do Something</Button>{' '}
-            <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+            <Button color="primary" onClick={this.toggleModal}>Done</Button>
           </ModalFooter>
         </Modal>
       </div>

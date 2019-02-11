@@ -33,12 +33,13 @@ class Review extends Component {
       loadingAnswers: false,
       answers: [],
       totalTime: 0,
-      itemBody: []
+      itemBody: [],
+      loadingBody: false
     }
   }
 
   componentDidMount() {
-    this.setState({loadingAnswers: true});
+    this.setState({loadingAnswers: true, loadingBody: true});
     axios.post('https://hidden-reef-87726.herokuapp.com/survey/answers/user', [{
       'username': localStorage.getItem('username')
     }]).then(response => {
@@ -74,6 +75,9 @@ class Review extends Component {
                 }
                 if(!alreadyIncluded) {
                   this.setState({itemBody: [...this.state.itemBody, {goal: item.target2_goal, subgoal: item.target2_subgoal, body: response.data}]});
+                }
+                if(i === this.state.answers.length - 1) {
+                  this.setState({loadingBody: false});
                 }
               });
             });
@@ -146,6 +150,7 @@ class Review extends Component {
         { this.state.loadingAnswers ? <Alert>Loading answers...</Alert> : 
         <div>
           <h4>Time Consumed: {parseInt(this.state.totalTime / 60, 10)} minutes, {this.state.totalTime % 60} seconds</h4>
+          {this.state.loadingBody ? <Alert color='secondary'>Loading SDG target information, please wait...</Alert> : false}
           <ListGroup>
             {this.state.answers.map((item, i) => {
               if(!item.finished) {
