@@ -44,6 +44,18 @@ class ConfirmPending extends Component {
     this.setState({userModal: !this.state.userModal});
   }
 
+  deleteRequest = (user_id) => {
+    axios.delete('https://hidden-reef-87726.herokuapp.com/users/delete', [{
+      user_id: toString(user_id)
+    }])
+    .then(response => {
+      window.location.reload();
+    })    
+    .catch(error => {
+      console.log(error.response.data);
+    })
+  }
+
   render() {
     return(
       <div>
@@ -51,7 +63,7 @@ class ConfirmPending extends Component {
         <Container>
           <h3>Confirm Pending Signup Requests</h3>
           <Modal isOpen={this.state.userModal} toggle={this.toggleUserModal} size='lg'>
-            <ModalHeader toggle={this.toggleUserModal}>User info</ModalHeader>
+            <ModalHeader toggle={this.toggleUserModal}>User info ({this.state.activeUser.user_id})</ModalHeader>
             <ModalBody>
               <Table responsive borderless> 
                 <tbody>
@@ -119,7 +131,7 @@ class ConfirmPending extends Component {
                     <td>{item.name}</td>
                     <td>{item.username}</td>
                     <td>{item.contact_person}</td>
-                    <td><Button color='warning' onClick={() => this.openModal(item)}>View Details</Button>{' '}<Button color='success' onClick={()=>this.confirmRequest(item.username)}>Confirm Request</Button></td>
+                    <td><Button color='danger' onClick={() => this.deleteRequest(item.user_id)}>Delete Request</Button>{' '}<Button color='warning' onClick={() => this.openModal(item)}>View Details</Button>{' '}<Button color='success' onClick={()=>this.confirmRequest(item.username)}>Confirm Request</Button></td>
                   </tr>
                 );
               }
