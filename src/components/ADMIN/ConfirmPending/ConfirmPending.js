@@ -20,7 +20,8 @@ class ConfirmPending extends Component {
       this.setState({users: response.data, isLoadingData: false});
       let pendingUsers = this.state.users.filter((item, i) => {
         return item.pending;
-      })
+      });
+      this.setState({pendingUsers: pendingUsers});
     })
   }
 
