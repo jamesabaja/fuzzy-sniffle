@@ -34,7 +34,8 @@ class Review extends Component {
       answers: [],
       totalTime: 0,
       itemBody: [],
-      loadingBody: false
+      loadingBody: false,
+      unfinishedAnswers: []
     }
   }
 
@@ -46,7 +47,7 @@ class Review extends Component {
       this.setState({answers: response.data, loadingAnswers: false}, () => {
         this.state.answers.map((item, i) => {
           if(!item.finished) {
-            this.setState((previousState) => {return{totalTime: previousState.totalTime + item.time_answered}}, () => {
+            this.setState((previousState) => {return{totalTime: previousState.totalTime + item.time_answered, unfinishedAnswers: [...previousState.unfinishedAnswers, item]}}, () => {
               axios.post('https://hidden-reef-87726.herokuapp.com/goals/body', [{
                 'goal_id': item.target1_goal,
                 'subgoal_id': item.target1_subgoal
@@ -123,6 +124,11 @@ class Review extends Component {
     });
   }
 
+  componentDidUpdate() {
+    console.log(this.state.answers);
+    console.log(this.state.unfinishedAnswers);
+  }
+
   colorStyle = (i) => {
     let color = colorScheme[i];
     return {
@@ -149,10 +155,10 @@ class Review extends Component {
         <h4>Review Module</h4>
         { this.state.loadingAnswers ? <Alert>Loading answers...</Alert> : 
         <div>
-          <h4>Time Consumed: {parseInt(this.state.totalTime / 60, 10)} minutes, {this.state.totalTime % 60} seconds</h4>
-          {this.state.loadingBody ? <Alert color='secondary'>Loading SDG target information, please wait...</Alert> : false}
+          {this.state.unfinishedAnswers.length > 0 ? <h5>Time Consumed: {parseInt(this.state.totalTime / 60, 10)} minutes, {this.state.totalTime % 60} seconds</h5> : <h6>No unreviewed answers found. Proceed to 'Survey' to answer survey and go back to review and finalize answers.</h6>}
+          {this.state.unfinishedAnswers.length > 0 && this.state.loadingBody ? <Alert color='secondary'>Loading SDG target information, please wait...</Alert> : false}
           <ListGroup>
-            {this.state.answers.map((item, i) => {
+            {this.state.unfinishedAnswers.map((item, i) => {
               if(!item.finished) {
                 return(
                 <ListGroupItem>
@@ -199,7 +205,7 @@ class Review extends Component {
             })}
           </ListGroup>
           <br />
-          {this.state.answers.length > 0 && <Button color='success' onClick={this.finalize}>Finalize and Submit Answers</Button>}
+          {this.state.unfinishedAnswers.length > 0 && <Button color='success' onClick={this.finalize}>Finalize and Submit Answers</Button>}
         </div>
         }
         

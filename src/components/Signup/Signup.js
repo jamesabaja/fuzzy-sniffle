@@ -46,7 +46,8 @@ class Signup extends Component {
         yrs_exp: this.state.yrs_exp,
         name: this.state.name,
         contact_person: this.state.professor,
-        acknowledge: this.state.acknowledge
+        acknowledge: this.state.acknowledge,
+        pending: true
       }])
       .then(response => {
         this.setState({isLoading: false});

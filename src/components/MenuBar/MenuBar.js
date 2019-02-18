@@ -17,7 +17,7 @@ class MenuBar extends Component {
 
   render() {
     return(
-      <Navbar color="info" dark expand="md">
+      <Navbar color="success" dark expand="md">
         <NavbarBrand href="/">SDG Interactions Survey</NavbarBrand>
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>

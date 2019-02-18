@@ -4,6 +4,9 @@ import axios from 'axios';
 import {connect} from 'react-redux';
 import {authenticate} from '../../actions/userActions';
 
+let ADMIN_USERNAME = 'admin';
+let ADMIN_PASSWORD = '18smsl19';
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -26,38 +29,42 @@ class Login extends Component {
       username: this.state.username,
       password: this.state.password
     });
-    this.setState({isLoading: true})
-    axios.post('https://hidden-reef-87726.herokuapp.com/users/confirm', [{
-      username: this.state.username,
-      password: this.state.password
-    }])
-    .then(response => {
-      if(response.status === 200) {
-        this.setState({isLoading: false});
-        this.props.authenticate(response.data.user_id);
-        localStorage.setItem('user_id', response.data.user_id);
-        localStorage.setItem('username', this.state.username);
-        axios.post('https://hidden-reef-87726.herokuapp.com/users/goals', [{
-          user_id: response.data.user_id
-        }])
-        .then(response => {
-          if(response.data.status_code === 400) {
-            this.props.history.push('/home');
-          }else {
-            this.props.history.push('/survey');
-          }
-        }).catch(error => {
-          if(error.response.status === 400) {
-            this.props.history.push('/home');
-          }
-        });
-      }
-    })
-    .catch(error => {
-      if(error.response.status === 404) {
-        this.setState({visible: true, isLoading: false});
-      }
-    });
+    this.setState({isLoading: true});
+    if(this.state.username === ADMIN_USERNAME && this.state.password === ADMIN_PASSWORD) {
+      this.props.history.push('/admin');
+    } else {
+      axios.post('https://hidden-reef-87726.herokuapp.com/users/confirm', [{
+        username: this.state.username,
+        password: this.state.password
+      }])
+      .then(response => {
+        if(response.status === 200) {
+          this.setState({isLoading: false});
+          this.props.authenticate(response.data.user_id);
+          localStorage.setItem('user_id', response.data.user_id);
+          localStorage.setItem('username', this.state.username);
+          axios.post('https://hidden-reef-87726.herokuapp.com/users/goals', [{
+            user_id: response.data.user_id
+          }])
+          .then(response => {
+            if(response.data.status_code === 400) {
+              this.props.history.push('/home');
+            }else {
+              this.props.history.push('/survey');
+            }
+          }).catch(error => {
+            if(error.response.status === 400) {
+              this.props.history.push('/home');
+            }
+          });
+        }
+      })
+      .catch(error => {
+        if(error.response.status === 404) {
+          this.setState({visible: true, isLoading: false});
+        }
+      });
+    }
   }
 
   onDismiss = () => {
@@ -78,7 +85,7 @@ class Login extends Component {
         </Alert>
         <Form>
           <FormGroup>
-            <Label for="accountName">Username</Label>
+            <Label for="accountName">Email</Label>
             <Input type="text" name="text" id="username" onChange={this.onChange} />
           </FormGroup>
           <FormGroup>

@@ -8,6 +8,9 @@ import Login from './components/Login/Login';
 import Survey from './components/Survey/Survey';
 import Review from './components/Review/Review';
 import AddGoals from './components/AddGoals/AddGoals';
+import Dashboard from './components/ADMIN/Dashboard/Dashboard';
+import ViewUsers from './components/ADMIN/ViewUsers/ViewUsers';
+import ConfirmPending from './components/ADMIN/ConfirmPending/ConfirmPending';
 
 class App extends Component {
   render() {
@@ -21,6 +24,9 @@ class App extends Component {
           <Route exact path='/survey' component={Survey} />
           <Route exact path='/review' component={Review} />
           <Route exact path='/add' component={AddGoals} />
+          <Route exact path='/admin' component={Dashboard} />
+          <Route exact path='/admin/view/users' component={ViewUsers} />
+          <Route exact path='/admin/view/pending' component={ConfirmPending} />
         </Switch>
       </div>
     );
