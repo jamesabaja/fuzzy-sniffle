@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Container, Table, Button, Alert} from 'reactstrap';
+import {Container, Table, Button, Alert, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import MenuBar from '../MenuBar/MenuBar';
 
 class ConfirmPending extends Component {
@@ -9,7 +9,9 @@ class ConfirmPending extends Component {
     this.state = {
       users: [],
       isLoadingData: false,
-      pendingUsers: []
+      pendingUsers: [],
+      activeUser: {},
+      userModal: false
     }
   }
 
@@ -34,12 +36,64 @@ class ConfirmPending extends Component {
     })
   }
 
+  openModal = (user) => {
+    this.setState({activeUser: user, userModal: true});
+  }
+
+  toggleUserModal = () => {
+    this.setState({userModal: !this.state.userModal});
+  }
+
   render() {
     return(
       <div>
         <MenuBar />
         <Container>
           <h3>Confirm Pending Signup Requests</h3>
+          <Modal isOpen={this.state.userModal} toggle={this.toggleUserModal} size='lg'>
+            <ModalHeader toggle={this.toggleUserModal}>User info</ModalHeader>
+            <ModalBody>
+              <Table responsive borderless> 
+                <tbody>
+                  <tr>
+                    <th>Name</th>
+                    <td>{this.state.activeUser.name}</td>
+                  </tr>
+                  <tr>
+                    <th>Primary Affiliation</th>
+                    <td>{this.state.activeUser.primary_aff}</td>
+                  </tr>
+                  <tr>
+                    <th>Secondary Affiliation</th>
+                    <td>{this.state.activeUser.secondary_aff}</td>
+                  </tr>
+                  <tr>
+                    <th>Highest Educational Attainment</th>
+                    <td>{this.state.educ_attain === 'bachelor\'s degree' ? 'Bachelor\'s Degree' : this.state.educ_attain === "master's or professional degree" || this.state.educ_attain === "Masters" ? "Master's or Professional Degree" : "PhD Degree" }</td>
+                  </tr>
+                  <tr>
+                    <th>Acknowledge in Research Studies?</th>
+                    <td>{this.state.activeUser.acknowledge ? 'Yes' : 'No'}</td>
+                  </tr>
+                  <tr>
+                    <th>Email</th>
+                    <td>{this.state.activeUser.username}</td>
+                  </tr>
+                  <tr>
+                    <th>Years of Experience</th>
+                    <td>{this.state.activeUser.yrs_exp}</td>
+                  </tr>
+                  <tr>
+                    <th>Professor</th>
+                    <td>{this.state.activeUser.contact_person}</td>
+                  </tr>
+                </tbody>
+              </Table>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.toggleUserModal}>Done</Button>
+            </ModalFooter>
+          </Modal>
           {this.state.isLoadingData ? 
           <Alert color='light'>
             Loading data, please wait ...
@@ -65,7 +119,7 @@ class ConfirmPending extends Component {
                     <td>{item.name}</td>
                     <td>{item.username}</td>
                     <td>{item.contact_person}</td>
-                    <td><Button color='warning'>View Details</Button>{' '}<Button color='success' onClick={()=>this.confirmRequest(item.username)}>Confirm Request</Button></td>
+                    <td><Button color='warning' onClick={() => this.openModal(item)}>View Details</Button>{' '}<Button color='success' onClick={()=>this.confirmRequest(item.username)}>Confirm Request</Button></td>
                   </tr>
                 );
               }
