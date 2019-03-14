@@ -31,8 +31,7 @@ class FrontPage extends Component {
             <b>Prof. Roselle Leah K. Rivera</b>, <i>College of Social Work and Community Development</i>
 
             <br/>
-            <b>James Gabriel Abaja</b>, <i>BS Computer Science</i> <br/>
-            <b>Wystan Dmitri Concepcion</b>, <i>BS Computer Science</i> <br/>
+            <b>James Gabriel Abaja</b> and <b>Wystan Concepcion</b>, <i>Undergraduate Students</i> <br/>
           </p>
           <p>
           <b>Analysis is exclusively for the Philippine setting</b>, and individual respondents are <b>required a minimum of five years</b> in the practice or study of sustainability and development issues (may include years in graduate school). Foreign respondents are welcome if the Philippines is one of their study or practice areas, and have at least five years total experience (practice or study), including Philippine experience. 

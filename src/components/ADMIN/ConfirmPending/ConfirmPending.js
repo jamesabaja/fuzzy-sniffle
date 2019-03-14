@@ -45,8 +45,9 @@ class ConfirmPending extends Component {
   }
 
   deleteRequest = (user_id) => {
-    axios.delete('https://hidden-reef-87726.herokuapp.com/users/delete', [{
-      user_id: toString(user_id)
+    console.log(user_id);
+    axios.post('https://hidden-reef-87726.herokuapp.com/users/delete', [{
+      username: user_id
     }])
     .then(response => {
       window.location.reload();
@@ -131,7 +132,7 @@ class ConfirmPending extends Component {
                     <td>{item.name}</td>
                     <td>{item.username}</td>
                     <td>{item.contact_person}</td>
-                    <td><Button color='danger' onClick={() => this.deleteRequest(item.user_id)}>Delete Request</Button>{' '}<Button color='warning' onClick={() => this.openModal(item)}>View Details</Button>{' '}<Button color='success' onClick={()=>this.confirmRequest(item.username)}>Confirm Request</Button></td>
+                    <td><Button color='danger' onClick={() => this.deleteRequest(item.username)}>Delete Request</Button>{' '}<Button color='warning' onClick={() => this.openModal(item)}>View Details</Button>{' '}<Button color='success' onClick={()=>this.confirmRequest(item.username)}>Confirm Request</Button></td>
                   </tr>
                 );
               }

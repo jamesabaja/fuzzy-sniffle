@@ -36,7 +36,7 @@ class ViewUsers extends Component {
               <tr>
                 <th>Name</th>
                 <th>Primary Affiliation</th>
-                <th>Highest Educational Attainment</th>
+                <th>Email Address</th>
                 <th>Professor</th>
               </tr>
             </thead>
@@ -47,7 +47,7 @@ class ViewUsers extends Component {
                   <tr>
                     <td>{item.name}</td>
                     <td>{item.primary_aff}</td>
-                    <td>{item.educ_attain === 'bachelor\'s degree' ? 'Bachelor\'s Degree' : item.educ_attain === "master's or professional degree" || item.educ_attain === "Masters" ? "Master's or Professional Degree" : "PhD Degree" }</td>
+                    <td>{/*item.educ_attain === 'bachelor\'s degree' ? 'Bachelor\'s Degree' : item.educ_attain === "master's or professional degree" || item.educ_attain === "Masters" ? "Master's or Professional Degree" : "PhD Degree"*/ item.username}</td>
                     <td>{item.contact_person}</td>
                   </tr>
                 );
