@@ -11,6 +11,7 @@ import AddGoals from './components/AddGoals/AddGoals';
 import Dashboard from './components/ADMIN/Dashboard/Dashboard';
 import ViewUsers from './components/ADMIN/ViewUsers/ViewUsers';
 import ConfirmPending from './components/ADMIN/ConfirmPending/ConfirmPending';
+import Query from './components/ADMIN/Query/Query';
 
 class App extends Component {
   render() {
@@ -27,6 +28,7 @@ class App extends Component {
           <Route exact path='/admin' component={Dashboard} />
           <Route exact path='/admin/view/users' component={ViewUsers} />
           <Route exact path='/admin/view/pending' component={ConfirmPending} />
+          <Route exact path='/admin/query' component={Query} />
         </Switch>
       </div>
     );

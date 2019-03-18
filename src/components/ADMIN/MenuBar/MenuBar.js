@@ -22,19 +22,22 @@ class MenuBar extends Component {
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
+            <NavItem>
+              <NavLink href="/admin/query">Query</NavLink>
+            </NavItem>
             <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
-                  Access Control
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem href='/admin/view/users'>
-                    View Registered Users
-                  </DropdownItem>
-                  <DropdownItem href='/admin/view/pending'>
-                    Confirm Pending Requests
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
+              <DropdownToggle nav caret>
+                Access Control
+              </DropdownToggle>
+              <DropdownMenu right>
+                <DropdownItem href='/admin/view/users'>
+                  View Registered Users
+                </DropdownItem>
+                <DropdownItem href='/admin/view/pending'>
+                  Confirm Pending Requests
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
             <NavItem>
               <NavLink href="/">Logout</NavLink>
             </NavItem>
