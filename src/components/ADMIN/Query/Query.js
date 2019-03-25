@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Container, Row, Col, Jumbotron, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Card, CardImg, CardText, CardBody, CardTitle, } from 'reactstrap';
+import {Container, Row, Col, Jumbotron, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, ListGroup, ListGroupItem, Button, Modal, ModalBody, ModalHeader, ModalFooter, Table } from 'reactstrap';
 import axios from 'axios';
 import MenuBar from '../MenuBar/MenuBar';
 
@@ -97,10 +97,26 @@ class Query extends Component {
     this.state = {
       firstGoalDropdown: false,
       secondGoalDropdown: false,
+      firstSubgoalDropdown: false,
+      secondSubgoalDropdown: false,
       selectedFirstGoal: {name: '', number: 1},
       selectedSecondGoal: {name: '', number: 1},
       firstIndex: 0,
-      secondIndex: 0
+      secondIndex: 0,
+      firstSubgoals: [],
+      secondSubgoals: [],
+      selectedFirstSubgoal: {subgoal_id: '0'},
+      selectedSecondSubgoal: {subgoal_id: '0'},
+      activeQuery: {
+        target1_goal: '',
+        target1_subgoal: '',
+        target2_goal: '',
+        target2_subgoal: '',
+        score: 0,
+        reason: '',
+        username: ''
+      },
+      queryModal: false
     }
   }
 
@@ -112,13 +128,88 @@ class Query extends Component {
     this.setState({secondGoalDropdown: !this.state.secondGoalDropdown});
   }
 
+  toggleFirstSubgoalDropdown = () => {
+    this.setState({firstSubgoalDropdown: !this.state.firstSubgoalDropdown});
+  }
+
+  toggleSecondSubgoalDropdown = () => {
+    this.setState({secondSubgoalDropdown: !this.state.secondSubgoalDropdown});
+  }
+
+  toggleQueryModal = () => {
+    this.setState(prevState => ({
+      queryModal: !prevState.queryModal,
+    }));
+  }
+
   selectGoal = (goal, order, index) => {
     switch(order) {
       case 'first':
-        this.setState({selectedFirstGoal: goal, firstIndex: index, selectedSecondGoal: {name: '', number: '1'}});
+        this.setState({selectedFirstGoal: goal, firstIndex: index, selectedSecondGoal: {name: '', number: '1'}, secondSubgoals: [], selectedFirstSubgoal: {subgoal_id: '0'}, selectedSecondSubgoal: {subgoal_id: '0'}});
+        axios.post('https://hidden-reef-87726.herokuapp.com/goals/sub',[{
+          goal_id: goal.number
+        }]).then(response => {
+          this.setState({firstSubgoals: response.data});
+        });
         break;
       case 'second':
-        this.setState({selectedSecondGoal: goal, secondIndex: index});
+        this.setState({selectedSecondGoal: goal, secondIndex: index, selectedSecondSubgoal: {subgoal_id: '0'}});
+        axios.post('https://hidden-reef-87726.herokuapp.com/goals/sub',[{
+          goal_id: goal.number
+        }]).then(response => {
+          this.setState({secondSubgoals: response.data});
+        });
+        break;
+    }
+  }
+
+  submit = () => {
+    axios.post('https://hidden-reef-87726.herokuapp.com/survey/answer/single', [{
+      target1_goal: this.state.selectedFirstSubgoal.goal_id,
+      target1_subgoal: this.state.selectedFirstSubgoal.subgoal_id,
+      target2_goal: this.state.selectedSecondSubgoal.goal_id,
+      target2_subgoal: this.state.selectedSecondSubgoal.subgoal_id
+    }]).then(response => {
+      console.log(response.data);
+      this.setState({activeQuery: response.data, queryModal: true});
+    }).catch(error => {
+      this.setState({activeQuery: {
+        target1_goal: '',
+        target1_subgoal: '',
+        target2_goal: '',
+        target2_subgoal: '',
+        score: 0,
+        reason: '',
+        username: ''
+      }, queryModal: true});
+    });
+  }
+
+  selectSubgoal = (subgoal, order) => {
+    switch(order) {
+      case 'first':
+        console.log(subgoal.goal_id, subgoal.subgoal_id);
+        this.setState({selectedFirstSubgoal: subgoal, activeQuery: {
+          target1_goal: '',
+          target1_subgoal: '',
+          target2_goal: '',
+          target2_subgoal: '',
+          score: 0,
+          reason: '',
+          username: ''
+        }});
+        break;
+      case 'second': 
+        console.log(subgoal.goal_id, subgoal.subgoal_id);
+        this.setState({selectedSecondSubgoal: subgoal, activeQuery: {
+        target1_goal: '',
+        target1_subgoal: '',
+        target2_goal: '',
+        target2_subgoal: '',
+        score: 0,
+        reason: '',
+        username: ''
+      }});
         break;
     }
   }
@@ -127,8 +218,43 @@ class Query extends Component {
     return(
       <div>
         <MenuBar/>
+        <Modal size='lg' isOpen={this.state.queryModal} toggle={this.toggleQueryModal}>
+          <ModalHeader toggle={this.toggleQueryModal}>
+          {this.state.activeQuery.username === '' ? 
+          'Interaction Details'
+          :
+          this.state.activeQuery.target1_goal + '.' + this.state.activeQuery.target1_subgoal + ' & ' + this.state.activeQuery.target2_goal + '.' + this.state.activeQuery.target2_subgoal
+          }
+          </ModalHeader>
+          <ModalBody>
+            <br/>
+            <Table>
+              {this.state.activeQuery.username === '' ? 
+              <tbody>
+                <p>This interaction/relationship has not yet been evaluated.</p>
+              </tbody>
+              :
+              <tbody>
+                <tr>
+                  <th>Score</th>
+                  <td>{this.state.activeQuery.score}</td>
+                </tr>
+                <tr>
+                  <th>Insights/Comments</th>
+                  <td>{this.state.activeQuery.reason}</td>
+                </tr>
+              </tbody>}
+            </Table>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="success" onClick={this.toggleQueryModal}>Done</Button>
+          </ModalFooter>
+        </Modal>
         <Container>
           <h3>Query Goals</h3>
+          <Button color='success' onClick={this.submit}>Submit</Button>
+          <br/>
+          <br/>
           <Row>
             <Col>
               <ButtonDropdown isOpen={this.state.firstGoalDropdown} toggle={this.toggleFirstGoalDropdown}>
@@ -143,17 +269,20 @@ class Query extends Component {
               </ButtonDropdown>
               <br/>
               <br/>
-              {/*this.state.selectedFirstGoal.name !== '' ? <Card className='clickable'>
-                <CardImg height="10%" width="10%" src={require(`../../../assets/Images/Goal${this.state.selectedFirstGoal.number}.png`)} alt="Card image cap" />
-                <CardBody>
-                  <CardTitle>Goal {this.state.selectedFirstGoal.number}</CardTitle>
-                </CardBody>
-                </Card>: ''*/}
-              {this.state.selectedFirstGoal.name !== '' ? <Jumbotron>
+              {this.state.selectedFirstGoal.name !== '' ? 
+              <Jumbotron>
                 <img className='center' height="30%" width="30%" src={require(`../../../assets/Images/Goal${this.state.selectedFirstGoal.number}.png`)}/>
                 <br/>
                 <span style={{color: this.state.selectedFirstGoal.colorScheme}}><h1 className="display-5 centered">Goal {this.state.selectedFirstGoal.number}</h1></span>
-              </Jumbotron>: ''}
+                <ListGroup>
+                  {this.state.firstSubgoals.map((item) => {
+                    if(item.subgoal_id !== 'title' && item.subgoal_id !== '0') {
+                      return(<ListGroupItem action className='clickable' active={this.state.selectedFirstSubgoal.subgoal_id === item.subgoal_id} onClick={() => this.selectSubgoal(item, 'first')}>{item.subgoal_id}: {item.body}</ListGroupItem>)
+                    }
+                  })}
+                </ListGroup>
+              </Jumbotron>
+              : ''}
             </Col>
             <Col>
               <ButtonDropdown isOpen={this.state.secondGoalDropdown} toggle={this.toggleSecondGoalDropdown}>
@@ -174,6 +303,13 @@ class Query extends Component {
                 <img className='center' height="30%" width="30%" src={require(`../../../assets/Images/Goal${this.state.selectedSecondGoal.number}.png`)}/>
                 <br/>
                 <span style={{color: this.state.selectedSecondGoal.colorScheme}}><h1 className="display-5 centered">Goal {this.state.selectedSecondGoal.number}</h1></span>
+                <ListGroup>
+                  {this.state.secondSubgoals.map((item) => {
+                    if(item.subgoal_id !== 'title' && item.subgoal_id !== '0') {
+                      return(<ListGroupItem action className='clickable' active={this.state.selectedSecondSubgoal.subgoal_id === item.subgoal_id} onClick={() => this.selectSubgoal(item, 'second')}>{item.subgoal_id}: {item.body}</ListGroupItem>)
+                    }
+                  })}
+                </ListGroup>
               </Jumbotron>: ''}
             </Col>
           </Row>
