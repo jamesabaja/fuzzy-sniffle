@@ -127,6 +127,7 @@ class AddGoals extends Component {
         <h3>Add Goals</h3>
         {this.state.loadingData ? <Alert color="info"> Loading data, please wait ... </Alert> : 
         <div>
+          <hr/>
           <Row>
           <Col xs='9'>
           <CardColumns>

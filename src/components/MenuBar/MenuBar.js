@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Navbar, NavbarBrand, NavbarToggler, Collapse, Nav, NavItem, NavLink} from 'reactstrap';
+import { Navbar, NavbarBrand, NavbarToggler, Collapse, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
 
 class MenuBar extends Component {
   constructor(props) {
@@ -25,11 +25,24 @@ class MenuBar extends Component {
             <NavItem>
               <NavLink href="/query">Query and Study Goals</NavLink>
             </NavItem>
+            <UncontrolledDropdown nav inNavbar>
+              <DropdownToggle nav caret>
+                Survey
+              </DropdownToggle>
+              <DropdownMenu right>
+                <DropdownItem href='/survey'>
+                  Answer Survey
+                </DropdownItem>
+                <DropdownItem href='/add'>
+                  Add Goals to Survey
+                </DropdownItem>
+                <DropdownItem href='/view/answers'>
+                  View Your Answers
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
             <NavItem>
-              <NavLink href="/survey">Survey</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/add">Add Goals</NavLink>
+              <NavLink href='/settings'>Settings</NavLink>
             </NavItem>
             <NavItem>
               <NavLink href="/">Logout</NavLink>

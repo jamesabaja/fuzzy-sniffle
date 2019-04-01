@@ -286,6 +286,7 @@ class Query extends Component {
         </Modal>
         <Container>
           <h3>Query Goals</h3>
+          <hr/>
           {this.state.selectedFirstSubgoal.subgoal_id !== '0' &&
           this.state.selectedSecondSubgoal.subgoal_id !== '0' ?
           <div>
