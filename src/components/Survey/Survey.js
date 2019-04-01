@@ -6,7 +6,7 @@ import axios from 'axios';
 import {connect} from 'react-redux';
 import MenuBar from '../MenuBar/MenuBar';
 import Tabs from '../Tabs/Tabs';
-import Slider, { Range } from 'rc-slider';
+import Slider from 'rc-slider';
 // We can just import Slider or Range to reduce bundle size
 // import Slider from 'rc-slider/lib/Slider';
 // import Range from 'rc-slider/lib/Range';

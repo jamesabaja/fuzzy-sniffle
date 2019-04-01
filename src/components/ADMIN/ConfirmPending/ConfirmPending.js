@@ -136,6 +136,7 @@ class ConfirmPending extends Component {
                   </tr>
                 );
               }
+              return null;
             })}
             </tbody>
           </Table>}

@@ -23,6 +23,9 @@ class MenuBar extends Component {
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
             <NavItem>
+              <NavLink href="/query">Query and Study Goals</NavLink>
+            </NavItem>
+            <NavItem>
               <NavLink href="/survey">Survey</NavLink>
             </NavItem>
             <NavItem>

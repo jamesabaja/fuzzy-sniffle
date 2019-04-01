@@ -83,6 +83,7 @@ class Review extends Component {
               });
             });
           }
+          return null;
         });
       });
     });
@@ -121,6 +122,7 @@ class Review extends Component {
           this.setState({answers: [], totalTime: 0});
         }
       });
+      return null;
     });
   }
 
@@ -202,6 +204,7 @@ class Review extends Component {
                 </ListGroupItem>
                 );
               }
+              return null;
             })}
           </ListGroup>
           <br />

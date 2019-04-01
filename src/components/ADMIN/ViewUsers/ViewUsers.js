@@ -158,6 +158,7 @@ class ViewUsers extends Component {
                     </tr>
                   );
                 }
+                return null;
               })}
               </tbody>
             </Table>

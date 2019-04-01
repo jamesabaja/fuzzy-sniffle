@@ -91,6 +91,26 @@ let GOALS = [
   }
 ]
 
+let colorScheme = {
+  '1': '#EB1C2D',
+  '2': '#D3A029',
+  '3': '#4CA146',
+  '4': '#C7212F',
+  '5': '#EF402D',
+  '6': '#27BFE6',
+  '7': '#FBC412',
+  '8': '#A31C44',
+  '9': '#F36D25',
+  '10': '#DD1367',
+  '11': '#F89D2A',
+  '12': '#CF8D2A',
+  '13': '#48773E',
+  '14': '#1F97D4',
+  '15': '#3EB049',
+  '16': '#136A9F',
+  '17': '#183668'
+}
+
 class Query extends Component {
   constructor(props) {
     super(props);
@@ -142,6 +162,13 @@ class Query extends Component {
     }));
   }
 
+  colorStyle = (i) => {
+    let color = colorScheme[i];
+    return {
+      color: color, 
+    }
+  }
+
   selectGoal = (goal, order, index) => {
     switch(order) {
       case 'first':
@@ -159,6 +186,8 @@ class Query extends Component {
         }]).then(response => {
           this.setState({secondSubgoals: response.data});
         });
+        break;
+      default: 
         break;
     }
   }
@@ -211,6 +240,8 @@ class Query extends Component {
         username: ''
       }});
         break;
+      default: 
+        break;
     }
   }
 
@@ -223,7 +254,10 @@ class Query extends Component {
           {this.state.activeQuery.username === '' ? 
           'Interaction Details'
           :
-          this.state.activeQuery.target1_goal + '.' + this.state.activeQuery.target1_subgoal + ' & ' + this.state.activeQuery.target2_goal + '.' + this.state.activeQuery.target2_subgoal
+          <div>
+            <span style={this.colorStyle(this.state.activeQuery.target1_goal)}>{this.state.activeQuery.target1_goal + '.' + this.state.activeQuery.target1_subgoal}</span> &{' '}
+            <span style={this.colorStyle(this.state.activeQuery.target2_goal)}>{this.state.activeQuery.target2_goal + '.' + this.state.activeQuery.target2_subgoal}</span>
+          </div>
           }
           </ModalHeader>
           <ModalBody>
@@ -252,9 +286,16 @@ class Query extends Component {
         </Modal>
         <Container>
           <h3>Query Goals</h3>
-          <Button color='success' onClick={this.submit}>Submit</Button>
-          <br/>
-          <br/>
+          {this.state.selectedFirstSubgoal.subgoal_id !== '0' &&
+          this.state.selectedSecondSubgoal.subgoal_id !== '0' ?
+          <div>
+            <Button color='success' onClick={this.submit}>Submit</Button> 
+            <br/>
+            <br/>
+          </div>
+          :
+          null 
+          }
           <Row>
             <Col>
               <ButtonDropdown isOpen={this.state.firstGoalDropdown} toggle={this.toggleFirstGoalDropdown}>
@@ -271,7 +312,7 @@ class Query extends Component {
               <br/>
               {this.state.selectedFirstGoal.name !== '' ? 
               <Jumbotron>
-                <img className='center' height="30%" width="30%" src={require(`../../../assets/Images/Goal${this.state.selectedFirstGoal.number}.png`)}/>
+                <img alt='goal1' className='center' height="30%" width="30%" src={require(`../../assets/Images/Goal${this.state.selectedFirstGoal.number}.png`)}/>
                 <br/>
                 <span style={{color: this.state.selectedFirstGoal.colorScheme}}><h1 className="display-5 centered">Goal {this.state.selectedFirstGoal.number}</h1></span>
                 <ListGroup>
@@ -279,6 +320,7 @@ class Query extends Component {
                     if(item.subgoal_id !== 'title' && item.subgoal_id !== '0') {
                       return(<ListGroupItem action className='clickable' active={this.state.selectedFirstSubgoal.subgoal_id === item.subgoal_id} onClick={() => this.selectSubgoal(item, 'first')}>{item.subgoal_id}: {item.body}</ListGroupItem>)
                     }
+                    return null;
                   })}
                 </ListGroup>
               </Jumbotron>
@@ -294,13 +336,14 @@ class Query extends Component {
                     if(i >= this.state.firstIndex) {
                       return (<DropdownItem onClick={() => this.selectGoal(item, 'second', i)}>{item.name}</DropdownItem>);
                     }
+                    return null;
                   })}
                 </DropdownMenu>
               </ButtonDropdown>
               <br/>
               <br/>
               {this.state.selectedSecondGoal.name !== '' ? <Jumbotron>
-                <img className='center' height="30%" width="30%" src={require(`../../../assets/Images/Goal${this.state.selectedSecondGoal.number}.png`)}/>
+                <img alt='goal2' className='center' height="30%" width="30%" src={require(`../../assets/Images/Goal${this.state.selectedSecondGoal.number}.png`)}/>
                 <br/>
                 <span style={{color: this.state.selectedSecondGoal.colorScheme}}><h1 className="display-5 centered">Goal {this.state.selectedSecondGoal.number}</h1></span>
                 <ListGroup>
@@ -308,6 +351,7 @@ class Query extends Component {
                     if(item.subgoal_id !== 'title' && item.subgoal_id !== '0') {
                       return(<ListGroupItem action className='clickable' active={this.state.selectedSecondSubgoal.subgoal_id === item.subgoal_id} onClick={() => this.selectSubgoal(item, 'second')}>{item.subgoal_id}: {item.body}</ListGroupItem>)
                     }
+                    return null;
                   })}
                 </ListGroup>
               </Jumbotron>: ''}
