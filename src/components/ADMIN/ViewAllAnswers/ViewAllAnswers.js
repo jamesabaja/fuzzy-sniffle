@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Container, ListGroup, ListGroupItem, Pagination, PaginationItem, PaginationLink, Row, Col, Alert} from 'reactstrap';
+import {Container, ListGroup, ListGroupItem, Pagination, PaginationItem, PaginationLink, Row, Col, Spinner, Alert} from 'reactstrap';
 import MenuBar from '../MenuBar/MenuBar';
 
 let colorScheme = {
@@ -23,26 +23,20 @@ let colorScheme = {
   '17': '#183668'
 }
 
-
-class ViewAnswers extends Component {
+class ViewAllAnswers extends Component {
   constructor(props) {
     super(props);
     this.state = {
       answers: [],
       pages: [],
       activePage: '1',
-      bodyContents: [],
-      isLoadingData: false
+      bodyContents: []
     };
   }
 
   componentWillMount() {
-    this.setState({isLoadingData: true});
-    axios.post('https://hidden-reef-87726.herokuapp.com/survey/answers/user', [{
-      username: localStorage.getItem('username')
-    }])
+    axios.get('https://hidden-reef-87726.herokuapp.com/survey/answers')
     .then(response => {
-      this.setState({isLoadingData: false});
       console.log(response.data);
       this.setState({answers: response.data}, () => {
         this.state.answers.map((item) => {
@@ -60,7 +54,13 @@ class ViewAnswers extends Component {
   }
 
   setActivePage = (page) => {
-    this.setState({activePage: page});
+    if(parseInt(page) < 1) {
+      this.setState({activePage: '1'});
+    }else if(parseInt(page) > this.state.pages.length) {
+      this.setState({activePage: String(this.state.pages.length)})
+    }else {
+      this.setState({activePage: page});
+    }
   }
 
   colorStyle = (i) => {
@@ -96,28 +96,55 @@ class ViewAnswers extends Component {
       <div>
         <MenuBar />
         <Container>
-          <h3>View Survey Answers</h3>
+          <h3>View All Answers</h3>
+          <Spinner color="success" type="grow" />
           <hr/>
-          {this.state.isLoadingData ? 
+          {this.state.pages.length === 0 ?
           <Alert color="light">
             Loading data, please wait ...
           </Alert>
           :
-          this.state.answers.length === 0 ?
-          <Alert color="light">
-            You have not yet answered any survey question.
-          </Alert>
-          :
           <Pagination>
+            <PaginationItem>
+              <PaginationLink previous onClick={() => this.setActivePage('1')} />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink previous onClick={() => this.setActivePage(String(parseInt(this.state.activePage)-1))}>
+              {'<'}
+              </PaginationLink>
+            </PaginationItem>
             {this.state.pages.map((item) => {
-              return(
-              <PaginationItem active={this.state.activePage === item ? true : false}>
-                <PaginationLink onClick={() => this.setActivePage(item)}>
-                  {item}
-                </PaginationLink>
-              </PaginationItem>
-              )
+              if(parseInt(item) > parseInt(this.state.activePage) - 5
+              &&
+              parseInt(item) < parseInt(this.state.activePage) + 5
+              ) {
+                console.log(parseInt(item), ((parseInt(this.state.activePage) % 10) + 10 * (parseInt(parseInt(this.state.activePage)/10))), (((parseInt(this.state.activePage) % 10) + 10 * (Math.ceil(parseInt(this.state.activePage)/10)))));
+                return(
+                <PaginationItem active={this.state.activePage === item ? true : false}>
+                  <PaginationLink onClick={() => this.setActivePage(item)}>
+                    {item}
+                  </PaginationLink>
+                </PaginationItem>
+                );
+              }
+              return null;
             })}
+            <PaginationItem>
+              <PaginationLink previous onClick={() => this.setActivePage(String(parseInt(this.state.activePage) + 1))}>
+              {'>'}
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink next onClick={() => this.setActivePage(String(this.state.pages.length))}/>
+            </PaginationItem>
+            {this.state.answers.length === 0 ?
+            null
+            :
+            <PaginationItem disabled>
+              <PaginationLink>
+                Total answers: {this.state.answers.length} / 28392
+              </PaginationLink>
+            </PaginationItem>}
           </Pagination>}
           <ListGroup>
           {this.state.answers.map((item, i) => {
@@ -154,6 +181,11 @@ class ViewAnswers extends Component {
                     <Col><b>Comments/Insights</b></Col>
                     <Col>{item.reason === '' ? 'None' : item.reason}</Col>
                   </Row>
+                  <hr/>
+                  <Row>
+                    <Col><b>Answered by</b></Col>
+                    <Col>{item.username}</Col>
+                  </Row>
                 </ListGroupItem>
                 <br/>
                 </div>
@@ -168,4 +200,4 @@ class ViewAnswers extends Component {
   }
 }
 
-export default ViewAnswers;
+export default ViewAllAnswers;

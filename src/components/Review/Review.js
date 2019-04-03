@@ -157,7 +157,7 @@ class Review extends Component {
         <h4>Review Module</h4>
         { this.state.loadingAnswers ? <Alert>Loading answers...</Alert> : 
         <div>
-          {this.state.unfinishedAnswers.length > 0 ? <h5>Time Consumed: {parseInt(this.state.totalTime / 60, 10)} minutes, {this.state.totalTime % 60} seconds</h5> : <h6>No unreviewed answers found. Proceed to 'Survey' to answer survey and go back to review and finalize answers.</h6>}
+          {this.state.unfinishedAnswers.length > 0 ? <h5>Time Consumed: {parseInt(this.state.totalTime / 60, 10)} minutes, {this.state.totalTime % 60} seconds</h5> : <h6><i>No unreviewed answers found. Proceed to 'Survey' to answer survey and go back to review and finalize answers.</i></h6>}
           {this.state.unfinishedAnswers.length > 0 && this.state.loadingBody ? <Alert color='secondary'>Loading SDG target information, please wait...</Alert> : false}
           <ListGroup>
             {this.state.unfinishedAnswers.map((item, i) => {

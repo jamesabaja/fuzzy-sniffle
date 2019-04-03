@@ -128,6 +128,7 @@ class ViewUsers extends Component {
         </Modal>
         <Container>
           <h3>View Registered Users</h3>
+          <hr/>
           {this.state.isLoadingData ?
           <Alert color='light'>
             Loading data, please wait ...

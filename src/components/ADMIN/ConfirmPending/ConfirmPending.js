@@ -63,6 +63,7 @@ class ConfirmPending extends Component {
         <MenuBar />
         <Container>
           <h3>Confirm Pending Signup Requests</h3>
+          <hr/>
           <Modal isOpen={this.state.userModal} toggle={this.toggleUserModal} size='lg'>
             <ModalHeader toggle={this.toggleUserModal}>User info ({this.state.activeUser.user_id})</ModalHeader>
             <ModalBody>
