@@ -97,20 +97,19 @@ class ViewAllAnswers extends Component {
         <MenuBar />
         <Container>
           <h3>View All Answers</h3>
-          <Spinner color="success" type="grow" />
           <hr/>
           {this.state.pages.length === 0 ?
           <Alert color="light">
-            Loading data, please wait ...
+            <Spinner color="success" type="grow" /> Loading data, please wait ...
           </Alert>
           :
           <Pagination>
             <PaginationItem>
-              <PaginationLink previous onClick={() => this.setActivePage('1')} />
+              <PaginationLink first onClick={() => this.setActivePage('1')} />
             </PaginationItem>
             <PaginationItem>
               <PaginationLink previous onClick={() => this.setActivePage(String(parseInt(this.state.activePage)-1))}>
-              {'<'}
+              
               </PaginationLink>
             </PaginationItem>
             {this.state.pages.map((item) => {
@@ -130,19 +129,18 @@ class ViewAllAnswers extends Component {
               return null;
             })}
             <PaginationItem>
-              <PaginationLink previous onClick={() => this.setActivePage(String(parseInt(this.state.activePage) + 1))}>
-              {'>'}
+              <PaginationLink next onClick={() => this.setActivePage(String(parseInt(this.state.activePage) + 1))}>
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink next onClick={() => this.setActivePage(String(this.state.pages.length))}/>
+              <PaginationLink last onClick={() => this.setActivePage(String(this.state.pages.length))}/>
             </PaginationItem>
             {this.state.answers.length === 0 ?
             null
             :
             <PaginationItem disabled>
               <PaginationLink>
-                Total answers: {this.state.answers.length} / 28392
+                Total answers: {this.state.answers.length} / 14196
               </PaginationLink>
             </PaginationItem>}
           </Pagination>}

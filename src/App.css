@@ -16,3 +16,7 @@
   margin-right: auto;
   width: 50%;
 }
+
+.graphBox {
+  border: 2px solid green;
+}

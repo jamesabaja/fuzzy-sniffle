@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Form, FormGroup, Label, Input, Button, Alert} from 'reactstrap';
+import {Form, FormGroup, Label, Input, Button, Alert, Spinner} from 'reactstrap';
 import axios from 'axios';
 import {connect} from 'react-redux';
 import {authenticate} from '../../actions/userActions';
@@ -29,7 +29,7 @@ class Login extends Component {
       username: this.state.username,
       password: this.state.password
     });
-    this.setState({isLoading: true});
+    this.setState({isLoading: true, visible: false});
     if(this.state.username === ADMIN_USERNAME && this.state.password === ADMIN_PASSWORD) {
       this.props.history.push('/admin');
     } else {
@@ -81,7 +81,7 @@ class Login extends Component {
           Invalid username and/or password.
         </Alert>
         <Alert color="light" isOpen={this.state.isLoading}>
-          Verifying your login credentials, please wait...
+          <Spinner type='grow' color='info'/> Verifying your login credentials, please wait...
         </Alert>
         <Form>
           <FormGroup>

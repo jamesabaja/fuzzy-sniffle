@@ -15,7 +15,7 @@ import Query from './components/Query/Query';
 import Settings from './components/Settings/Settings';
 import ViewAnswers from './components/ViewAnswers/ViewAnswers';
 import ViewAllAnswers from './components/ADMIN/ViewAllAnswers/ViewAllAnswers';
-import GraphModule from './components/ADMIN/Graph/Graph';
+import GraphQuery from './components/ADMIN/Graph/Graph';
 
 class App extends Component {
   render() {
@@ -36,7 +36,7 @@ class App extends Component {
           <Route exact path='/admin/view/users' component={ViewUsers} />
           <Route exact path='/admin/view/pending' component={ConfirmPending} />
           <Route exact path='/admin/view/answers' component={ViewAllAnswers} />
-          <Route exact path='/admin/graph' component={GraphModule} />
+          <Route exact path='/admin/graph' component={GraphQuery} />
         </Switch>
       </div>
     );
