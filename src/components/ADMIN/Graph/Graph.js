@@ -313,21 +313,13 @@ class GraphQuery extends Component {
             if(this.state.data.nodes[0].id === 'Master Node') {
               console.log(this.state.data.nodes.shift());
             }
-          }
-          if(i === data.length - 1) {
-            if(x === forQuery.length - 1) {
-              for(let j = 0; j < this.state.data.nodes.length; j++) {
-                console.log(this.state.data.nodes[j]);
-                for(let k = j+1; k < this.state.data.nodes.length; k++) {
-                  if(this.state.data.nodes[j].id !== 'Master Node') {
-                    this.state.data.links.push({source: this.state.data.nodes[j].id, target: this.state.data.nodes[k].id});
-                  }
-                }
+            if(this.state.data.nodes.length > 1) {
+              for(let j = 0; j < this.state.data.nodes.length - 1; j++) {
+                this.state.data.links.push({source: this.state.data.nodes[this.state.data.nodes.length - 1].id, target: this.state.data.nodes[j].id});
               }
             }
           }
         }
-        
         this.setState({firstSubgoals: response.data, config: myConfig});
       });
       if(x === forQuery.length - 1) {
@@ -371,7 +363,7 @@ class GraphQuery extends Component {
           <hr/>
           {this.state.totalLinks > 1 ? <Alert color='light'>
               Total Links/Interactions/Edges: {this.state.totalLinks} <br />
-              Total Colored Edges: {VALUE} / {this.state.totalLinks}
+              Total Colored Edges: {VALUE} / {this.state.data.links.length}
           </Alert> : null}
           <h4>
           {this.state.forQuery.map(item => {
