@@ -333,17 +333,17 @@ class Survey extends Component {
               </Row>
               <br/>
               <Slider min={-3} max={3} defaultValue={0} 
-                marks={{
-                  '-3': {"style": 'bold', 'label': '-3'},
-                  '-2': '-2',
-                  '-1': '-1',
-                  '0': '0',
-                  '1': '1',
-                  '2': '2',
-                  '3': '3'
-                }}
-                included={false}
-                onChange={this.sliderChange}
+                  marks={{
+                    '-3': '-3',
+                    '-2': '-2',
+                    '-1': '-1',
+                    '0': '0',
+                    '1': '1',
+                    '2': '2',
+                    '3': '3'
+                  }}
+                  included={false}
+                  onChange={this.sliderChange}
               />
               <br/>
               {this.state.scoreValue >= 0 && <Label for="answer"><b>Key Interactions</b> <i>Comments/Additional Notes</i></Label>}

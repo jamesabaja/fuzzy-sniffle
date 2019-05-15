@@ -113,7 +113,7 @@ class ViewUsers extends Component {
                 </tr>
                 <tr>
                   <th>Highest Educational Attainment</th>
-                  <td>{this.state.activeUser.educ_attain}</td>
+                  <td>{this.state.activeUser.educ_attain === 'bachelor\'s degree' ? 'Bachelor\'s Degree' : this.state.activeUser.educ_attain === "master's or professional degree" ?  "Master's or Professional Degree" : 'PhD Degree'}</td>
                 </tr>
                 <tr>
                   <th>Years of Experience in the field of SDGs</th>
