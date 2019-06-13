@@ -3,6 +3,7 @@ import axios from 'axios';
 import {Container, ListGroup, ListGroupItem, Pagination, PaginationItem, PaginationLink, Row, Col, Spinner, Alert} from 'reactstrap';
 import MenuBar from '../MenuBar/MenuBar';
 
+let NEGATIVE = 0;
 let colorScheme = {
   '1': '#EB1C2D',
   '2': '#D3A029',
@@ -30,7 +31,7 @@ class ViewAllAnswers extends Component {
       answers: [],
       pages: [],
       activePage: '1',
-      bodyContents: []
+      bodyContents: [],
     };
   }
 
@@ -38,6 +39,11 @@ class ViewAllAnswers extends Component {
     axios.get('https://hidden-reef-87726.herokuapp.com/survey/answers')
     .then(response => {
       console.log(response.data);
+      for(let i = 0; i < response.data.length; i++) {
+        if(Number(response.data[i].score) < 0) {
+          NEGATIVE += 1;
+        }
+      }
       this.setState({answers: response.data}, () => {
         this.state.answers.map((item) => {
           this.getBody(item.target1_goal, item.target1_subgoal);
@@ -140,13 +146,14 @@ class ViewAllAnswers extends Component {
             :
             <PaginationItem disabled>
               <PaginationLink>
-                Total answers: {this.state.answers.length} / 14196
+                Total answers: {this.state.answers.length} / 14196, Negative Answers: {NEGATIVE}
               </PaginationLink>
             </PaginationItem>}
           </Pagination>}
           <ListGroup>
           {this.state.answers.map((item, i) => {
-            if(i < parseInt(this.state.activePage) * 10 && i >= (parseInt(this.state.activePage) - 1)* 10) {
+            if(i < parseInt(this.state.activePage) * 10 && i >= (parseInt(this.state.activePage) - 1)* 10 && Number(item.score) < 0) {
+              
               return(
                 <div>
                 <ListGroupItem>

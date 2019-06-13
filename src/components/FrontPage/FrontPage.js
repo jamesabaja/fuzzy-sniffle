@@ -36,11 +36,15 @@ class FrontPage extends Component {
           <p>
           <b>Analysis is exclusively for the Philippine setting</b>, and individual respondents are <b>required a minimum of five years</b> in the practice or study of sustainability and development issues (may include years in graduate school). Foreign respondents are welcome if the Philippines is one of their study or practice areas, and have at least five years total experience (practice or study), including Philippine experience. 
           </p>
+          <p>
+            For a background on our analysis and methods, your may refer to the study by <a href='https://council.science/publications/a-guide-to-sdg-interactions-from-science-to-implementation' target='_blank' rel='noopener noreferrer'>clicking this link.</a>
+          </p>
           <p className='lead'><i>Chrome is the recommended browser for the software; we are working on compatibility issues with FireFox.</i></p>
           <hr className="my-2" />
           <p className="lead">
             <Button outline color='primary' href='/signup'>Signup </Button>{' '}
-            <Button outline color='success' href='/login'>Login</Button>
+            <Button outline color='success' href='/login'>Login</Button>{' '}
+            <Button outline color='primary' href='/graph_query'>Query and Study Goal Targets</Button>
           </p>
         </Jumbotron>
       </div>

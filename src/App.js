@@ -16,6 +16,7 @@ import Settings from './components/Settings/Settings';
 import ViewAnswers from './components/ViewAnswers/ViewAnswers';
 import ViewAllAnswers from './components/ADMIN/ViewAllAnswers/ViewAllAnswers';
 import GraphQuery from './components/ADMIN/Graph/Graph';
+import GraphPublic from './components/Graph/Graph';
 
 class App extends Component {
   render() {
@@ -37,6 +38,7 @@ class App extends Component {
           <Route exact path='/admin/view/pending' component={ConfirmPending} />
           <Route exact path='/admin/view/answers' component={ViewAllAnswers} />
           <Route exact path='/admin/graph' component={GraphQuery} />
+          <Route exact path='/graph_query' component={GraphPublic} />
         </Switch>
       </div>
     );

@@ -75,6 +75,7 @@ class ViewUsers extends Component {
       username: this.state.activeUser.username,
       new_password: 'password'
     }]).then(response => {
+      window.location.reload();
       console.log(response.data);
     })
   }
