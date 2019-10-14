@@ -152,7 +152,7 @@ class ViewAllAnswers extends Component {
           </Pagination>}
           <ListGroup>
           {this.state.answers.map((item, i) => {
-            if(i < parseInt(this.state.activePage) * 10 && i >= (parseInt(this.state.activePage) - 1)* 10 && Number(item.score) < 0) {
+            if(i < parseInt(this.state.activePage) * 10 && i >= (parseInt(this.state.activePage) - 1)* 10) {
               
               return(
                 <div>
