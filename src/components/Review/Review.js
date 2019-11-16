@@ -117,9 +117,9 @@ class Review extends Component {
         'finished': true,
         'time_answered': item.time_answered
       }]).then(response => {
-        console.log(response);
         if(i === this.state.answers.length - 1) {
-          this.setState({answers: [], totalTime: 0});
+          // add unfinishedAnswers: [] to setState
+          this.setState({answers: [], totalTime: 0, unfinishedAnswers: []});
         }
       });
       return null;
@@ -187,7 +187,8 @@ class Review extends Component {
                   <br/>
                   <Slider min={-3} max={3} defaultValue={item.score} 
                     marks={{
-                      '-3': {"style": 'bold', 'label': '-3'},
+                      // comment label with style
+                      '-3': '-3',
                       '-2': '-2',
                       '-1': '-1',
                       '0': '0',
