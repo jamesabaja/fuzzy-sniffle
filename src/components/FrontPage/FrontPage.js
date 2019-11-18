@@ -50,6 +50,7 @@ class FrontPage extends Component {
             <b>James Gabriel Abaja (2018)</b> and{" "}
             <b>Wystan Concepcion (2018)</b>, <i>Undergraduate Students</i>{" "}
             <br />
+            
           </p>
           <p>
             <b>Analysis is exclusively for the Philippine setting</b>, and
@@ -87,6 +88,8 @@ class FrontPage extends Component {
               on compatibility issues with FireFox.
             </i>
           </p>
+          <p><i>Contact us</i> <br />
+            <b>Nikki Fernandez</b> (nrfernandez2@up.edu.ph) and <b>Carlo La Rosa</b> (larosacarlo18@gmail.com)</p>
           <hr className="my-2" />
           <p className="lead">
             <Button outline color="primary" href="/signup">

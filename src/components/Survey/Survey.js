@@ -32,6 +32,26 @@ let colorScheme = {
   '17': '#183668'
 }
 
+let goalName = {
+  '1': 'No Poverty',
+  '2': 'Zero Hunger',
+  '3': 'Good Health and Well being',
+  '4': 'Quality Education',
+  '5': 'Gender Equality',
+  '6': 'Clean Water and Sanitation',
+  '7': 'Affordable and Clean Energy',
+  '8': 'Decent Work and Economic Growth',
+  '9': 'Industry, Innovation and Infrastructure',
+  '10': 'Reduced Inequalities',
+  '11': 'Sustainable Cities and Communities',
+  '12': 'Responsible Consumption and Production',
+  '13': 'Climate Action',
+  '14': 'Life below Water',
+  '15': 'Life on Land',
+  '16': 'Peace, Justice, and Strong Institutions',
+  '17': 'Partnership for the Goals'
+}
+
 //let selected = ["1", "2", "6"];
 class Survey extends Component {
   constructor(props) {
@@ -183,6 +203,11 @@ class Survey extends Component {
     }
   }
 
+  goal_name = (i) =>{
+    let name = goalName[i];
+    return name
+  }
+
   nextSubgoal = () => {
     let randomIndex = Math.floor(Math.random() * Math.floor(this.state.pairings.length));
     if(this.state.pairings[randomIndex][0].goal_id === this.state.pairings[randomIndex][1].goal_id) {
@@ -289,7 +314,7 @@ class Survey extends Component {
         <Alert color='danger' isOpen={this.state.isEmpty} toggle={this.onDismiss}>
           Key Interaction field is required as you have entered a negative interaction score for the targets.
         </Alert>
-        <ListGroup>
+        <ListGroup style = {{margin:10}}>
           {/*this.state.subgoals.map((item, i) => {
             return(
               <ListGroupItem id={i}>
@@ -322,32 +347,65 @@ class Survey extends Component {
               <Row>
                 <Col>
                 <span style={this.colorStyle(this.state.pairings[this.state.activeSubgoal][0].goal_id)}>
+                <h4>{this.goal_name(this.state.pairings[this.state.activeSubgoal][0].goal_id)}</h4>
                 <h4>{this.state.pairings[this.state.activeSubgoal][0].goal_id}.{this.state.pairings[this.state.activeSubgoal][0].subgoal_id}</h4> </span>
                 {this.state.pairings[this.state.activeSubgoal][0].body}
                 </Col>
                 <Col>
                 <span style={this.colorStyle(this.state.pairings[this.state.activeSubgoal][1].goal_id)}>
+                <h4>{this.goal_name(this.state.pairings[this.state.activeSubgoal][1].goal_id)}</h4>
                 <h4>{this.state.pairings[this.state.activeSubgoal][1].goal_id}.{this.state.pairings[this.state.activeSubgoal][1].subgoal_id}</h4> </span>
                 {this.state.pairings[this.state.activeSubgoal][1].body}
                 </Col>
               </Row>
               <br/>
-              <Slider min={-3} max={3} defaultValue={0} 
+              <div style= {{margin: 50}}> 
+              <Slider min={-3} max={3} defaultValue={0} trackStyle={{width: 10}}  
                   marks={{
-                    '-3': '-3',
-                    '-2': '-2',
-                    '-1': '-1',
-                    '0': '0',
-                    '1': '1',
-                    '2': '2',
-                    '3': '3'
+                    '-3': {
+                      style:{
+                        color:'black',
+                      }, label:  <span><b>-3</b><br />Cancelling</span>
+                  },
+                    '-2':{
+                      style:{
+                        color:'black',
+                      }, label:  <span><b>-2</b><br />Counteracting</span>
+                  },
+                    '-1': {
+                      style:{
+                        color:'black',
+                      }, label:  <span><b>-1</b><br />Constraining</span>
+                  },
+                    '0': {
+                      style:{
+                        color:'black',
+                      }, label:  <span><b>0</b><br />Consistent</span>
+                  },
+                    '1': {
+                      style:{
+                        color:'black',
+                      }, label:  <span><b>+1</b><br />Enabling</span>
+                  },
+                    '2': {
+                      style:{
+                        color:'black',
+                      }, label:  <span><b>+2</b><br />Reinforcing</span>
+                  },
+                    '3': {
+                      style:{
+                        color:'black',
+                      }, label:  <span><b>+3</b><br />Indivisible</span>
+                  }
                   }}
                   included={false}
                   onChange={this.sliderChange}
               />
+               
+              </div>
               <br/>
               {this.state.scoreValue >= 0 && <Label for="answer"><b>Key Interactions</b> <i>Comments/Additional Notes</i></Label>}
-              {this.state.scoreValue < 0 && <Label style={{color: 'red'}}for="answer"><b>Key Interactions</b> <i>Comments/Additional Notes (REQUIRED)</i></Label>}
+              {this.state.scoreValue < 0 && <Label style={{color: 'red'}}for="answer"><b>Key Interactions</b> <i>Suggested Mitigation Measure (REQUIRED)</i></Label>}
               <Input value={this.state.comment} type="text" name="answer" id="comment" onChange={this.onChange}/>
               <br />
               <Button color='success' onClick={() => this.submitAnswer(this.state.pairings[this.state.activeSubgoal][0].goal_id, this.state.pairings[this.state.activeSubgoal][0].subgoal_id, this.state.pairings[this.state.activeSubgoal][1].goal_id, this.state.pairings[this.state.activeSubgoal][1].subgoal_id)}>Submit</Button>
