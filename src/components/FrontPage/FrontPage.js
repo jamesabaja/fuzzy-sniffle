@@ -45,11 +45,11 @@ class FrontPage extends Component {
             <b>Prof. Roselle Leah K. Rivera</b>,{" "}
             <i>College of Social Work and Community Development</i>
             <br />
-            <b>Wystan Concepcion </b> and{" "}
-            <b>James Gabriel Abaja </b>, <i>Undergraduate Students (2018)</i><br />{" "}
             <b>Nikki Fernandez</b> and <b>Carlo La Rosa</b>,{" "}
             <i>Undergraduate Students (2019)</i> <br />
             <br />
+            <b>Wystan Concepcion </b> and{" "}
+            <b>James Gabriel Abaja </b>, <i>Undergraduate Students (2018)</i><br />{" "}
             
           </p>
           <p>
